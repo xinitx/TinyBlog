@@ -1,0 +1,60 @@
+/* src/index.css */
+/* 滚动条样式 */
+
+.music-player {
+  min-width: 200px;
+  min-height: 80px;
+  display: flex;
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.5);
+  padding: 5px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 90%;
+}
+.music-cover{
+  width: 40%;
+  height: 80%;
+  margin: auto;
+  border-radius: 50%;
+  &:hover{
+    transform: scale(1.1);
+    fill: #5d5d5d;
+  }
+}
+.music-info{
+  flex: 1;
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  gap: 20px;
+  .music-title{
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    position: absolute;
+    top: 0;
+    font-size: 12px;
+    color: #666;
+  }
+  .music-controls{
+    margin: auto ;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+  }
+  .music-progress{
+    position: absolute;
+    bottom: 0;
+  }
+}
+.music-volume{
+  position: absolute;
+  right: 0;
+}
+.music-controls-icon:hover{
+  fill: #5d5d5d;
+}
+
