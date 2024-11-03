@@ -4,17 +4,37 @@ import Content from './pages/Content/Content';
 import Footer from './components/Footer/Footer';
 import Header from './components/Header/Header';
 import './App.less'
+import {useEffect, useRef, useState} from "react";
 
 function App() {
-
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const appRef = useRef<HTMLDivElement>(null);
+    const getSidebarOpen = (open: boolean) => {
+        setSidebarOpen(open);
+    };
+    const handleResize = () => {
+        if (appRef.current) {
+            // 临时禁用 transition
+            appRef.current.style.transition = "none";
+            // 强制浏览器重新计算样式
+            void appRef.current.offsetWidth;
+            // 恢复 transition
+            appRef.current.style.transition = "margin-left 0.3s ease-in-out";
+        }
+    };
+    useEffect(() => {
+        window.addEventListener("resize", handleResize);
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, []);
     return (
-    <>
-    <Header></Header>
-    <Sidebar>
-    </Sidebar>
-    <Content></Content>
-    <Footer></Footer>
-    </>
+    <div ref={appRef} className={`app ${sidebarOpen ? 'app-sidebar-open' : ''}`}>
+        <Header></Header>
+        <Content></Content>
+        <Footer></Footer>
+        <Sidebar getOpen={getSidebarOpen}></Sidebar>
+    </div>
   )
 }
 

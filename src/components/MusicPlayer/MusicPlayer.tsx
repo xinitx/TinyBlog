@@ -17,86 +17,74 @@ interface MusicPlayerProps {
 const MusicPlayer: React.FC<MusicPlayerProps> = ({ initialSongIndex = 0, className }) => {
     const [currentSongIndex, setCurrentSongIndex] = useState(initialSongIndex);
     const [isPlaying, setIsPlaying] = useState(false);
+    const [isFirst, setIsFirst] = useState(true);
     const [progress, setProgress] = useState(0);
     const [volume, setVolume] = useState(0);
     const audioRef = useRef<HTMLAudioElement | null>(null);
-    const containerRef = useRef<HTMLDivElement>(null);
+
     //手动切换
     const handleNextSong = () => {
         setCurrentSongIndex((currentSongIndex + 1) % songs.length);
     };
-
     const handlePrevSong = () => {
         setCurrentSongIndex((currentSongIndex - 1 + songs.length) % songs.length);
     };
+
     useEffect(() => {
+        if(isFirst){
+            handleVolumeChange(0)
+        }
         //准备下一曲
-        if(audioRef.current){
+        if(audioRef.current &&  (isFirst || ( isPlaying && audioRef.current.src.indexOf(songs[currentSongIndex].url) === -1 ))){
+            setIsFirst(false)
             audioRef.current.src = songs[currentSongIndex].url;
             audioRef.current.load();
         }
-    }, [currentSongIndex]);
-
+        audioRef.current?.addEventListener('timeupdate', handleTimeUpdate)
+        audioRef.current?.addEventListener('loadeddata', ()=>{if(isPlaying)audioRef.current?.play();})
+        return () => {
+            audioRef.current?.removeEventListener('loadeddata', ()=>{if(isPlaying)audioRef.current?.play();})
+            audioRef.current?.removeEventListener('timeupdate', handleTimeUpdate)
+        };
+    }, [currentSongIndex, isPlaying]);
     const handlePlayPause = () => {
         if (audioRef.current) {
             if (isPlaying) {
                 audioRef.current.pause();
             } else {
-                if(Math.ceil(progress) >= 90){
-                    setCurrentSongIndex((currentSongIndex + 1) % songs.length);
-                }else{
-                    audioRef.current.play();
-                }
+                audioRef.current.play();
             }
             setIsPlaying(!isPlaying);
         }
     };
-
-
-
     const handleProgressChange = (v: number) => {
         if (audioRef.current && !isNaN(audioRef.current.duration)) {
-            audioRef.current.currentTime = (audioRef.current.duration / 0.9 / 100) * v;
+            if(v >= 100){
+                v = 99
+            }
+            audioRef.current.currentTime = (audioRef.current.duration / 100) * v;
             setProgress(v);
+        }
+    };
+    const handleTimeUpdate =() => {
+        if (audioRef.current && !isNaN(audioRef.current.duration)) {
+            const buf = (audioRef.current.currentTime / audioRef.current.duration) * 100;
+            setProgress(buf);
+            if(buf >= 100){
+                setCurrentSongIndex((currentSongIndex + 1) % songs.length);
+            }
         }
     };
     const handleVolumeChange = (v: number) => {
         const newVolume = v;
         setVolume(newVolume);
         if (audioRef.current) {
-            audioRef.current.volume = newVolume / 0.9 / 100;
+            audioRef.current.volume = newVolume < 0.01 ? 0 : newVolume / 100;
         }
     };
-    const handleTimeUpdate =() => {
-        console.log("audioRef.current?.currentTime")
-        if (audioRef.current && !isNaN(audioRef.current.duration)) {
-            const buf = (audioRef.current.currentTime / audioRef.current.duration) * 100 * 0.9;
-            setProgress(buf);
-            if(Math.ceil(buf) >= 90 && isPlaying){
-                setCurrentSongIndex((currentSongIndex + 1) % songs.length);
-            }
-        }
-    };
-    const playMusic = ()=>{
-        if(audioRef.current && isPlaying){
-            console.log(isPlaying)
-            audioRef.current.play()
-        }
-    }
-    useEffect(() => {
-
-        if (audioRef.current) {
-            audioRef.current.addEventListener('timeupdate', handleTimeUpdate);
-            audioRef.current.addEventListener('loadeddata', playMusic);
-            return () => {
-                audioRef.current?.removeEventListener('timeupdate', handleTimeUpdate);
-                audioRef.current?.removeEventListener('loadeddata', handleNextSong);
-            };
-        }
-    }, [isPlaying]);
 
     return (
-        <div className={`music-player ${className ? className : ' '}`} ref={containerRef}>
+        <div className={`music-player ${className ? className : ' '}`}>
             <audio ref={audioRef} />
             { !isPlaying ?  <IconPlay className={'music-cover'} onClick={handlePlayPause}/> : <IconPause className={'music-cover'} onClick={handlePlayPause}/> }
             <div className={'music-info'}>
