@@ -19,7 +19,6 @@ const Sidebar: React.FC<SidebarProps> = ( sidebarProps) => {
     const toggleSidebar = () => {
         sidebarProps.getOpen && sidebarProps.getOpen(!isOpen);
         setIsOpen(!isOpen);
-
     };
     const handleResize = () => {
         if (ContainerRef.current) {
@@ -28,7 +27,7 @@ const Sidebar: React.FC<SidebarProps> = ( sidebarProps) => {
             // 强制浏览器重新计算样式
             void ContainerRef.current.offsetWidth;
             // 恢复 transition
-            ContainerRef.current.style.transition = "margin-left 0.3s ease-in-out";
+            ContainerRef.current.style.transition = "left 0.3s ease-in-out";
         }
     };
     useEffect(() => {
@@ -36,7 +35,7 @@ const Sidebar: React.FC<SidebarProps> = ( sidebarProps) => {
         return () => {
             window.removeEventListener("resize", handleResize);
         };
-    }, []);
+    }, [ContainerRef]);
     return (
         <div className={`sidebar ${isOpen ? 'sidebar-open' : ''}`} ref={ContainerRef}>
             <div  className={`sidebar-container`} ref={SidebarRef}>

@@ -7,10 +7,10 @@ interface SliderScrollProps {
 }
 
 const SliderScroll : React.FC<SliderScrollProps> = (props) => {
-    const [scrollProgress, setScrollProgress] = React.useState(0);
+    const [scrollProgress, setScrollProgress] = useState(0);
     const [scrollable, setScrollable] = useState(false);
     const {parentRef, vertical= false} = props;
-    const observeScrollbar = () => {
+    const observeScrollbar = ():void => {
         if (parentRef.current) {
             if(vertical && parentRef.current?.scrollHeight !== parentRef.current?.clientHeight){
                 setScrollable(true)
@@ -33,6 +33,7 @@ const SliderScroll : React.FC<SliderScrollProps> = (props) => {
         const resizeObserver = new ResizeObserver(observeScrollbar);
         if(parentRef.current){
             resizeObserver.observe(parentRef.current);
+            observeScrollbar()
             if(vertical){
                 parentRef.current.addEventListener('scroll', handleScroll);
             }
@@ -45,7 +46,7 @@ const SliderScroll : React.FC<SliderScrollProps> = (props) => {
                 }
             }
         }
-    },[])
+    },[parentRef])
     useEffect(()=>{
         if(parentRef.current){
             if(vertical){
@@ -53,16 +54,9 @@ const SliderScroll : React.FC<SliderScrollProps> = (props) => {
             }else{
                 parentRef.current.scrollLeft = (parentRef.current.scrollWidth - parentRef.current.clientWidth) * scrollProgress / 100
             }
-
-            console.log(parentRef.current.scrollLeft)
-            console.log(parentRef.current.scrollTop)
-            console.log(parentRef.current.scrollWidth)
-            console.log(parentRef.current.scrollHeight)
-            console.log(parentRef.current.clientWidth)
-            console.log(parentRef.current.clientHeight)
         }
-
     },[scrollProgress])
+
     return(
         <>
         { vertical ? scrollable  && <Slider direction={'bottom'} vertical={vertical} barClass={'scroll-vertical'} progress={scrollProgress} func={setScrollProgress} ></Slider>

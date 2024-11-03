@@ -1,8 +1,8 @@
 
 import Sidebar from './pages/Sidebar/Sidebar';
 import Content from './pages/Content/Content';
-import Footer from './components/Footer/Footer';
-import Header from './components/Header/Header';
+import Footer from './pages/Footer/Footer';
+import Header from './pages/Header/Header';
 import './App.less'
 import {useEffect, useRef, useState} from "react";
 
@@ -27,7 +27,7 @@ function App() {
         return () => {
             window.removeEventListener("resize", handleResize);
         };
-    }, []);
+    }, [appRef]);
     return (
     <div ref={appRef} className={`app ${sidebarOpen ? 'app-sidebar-open' : ''}`}>
         <Header></Header>
