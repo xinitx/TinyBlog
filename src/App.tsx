@@ -22,6 +22,7 @@ function App() {
             appRef.current.style.transition = "margin-left 0.3s ease-in-out";
         }
     };
+
     useEffect(() => {
         window.addEventListener("resize", handleResize);
         return () => {

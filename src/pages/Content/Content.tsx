@@ -1,45 +1,31 @@
 import  "./Content.less";
 import React from "react";
-import ReactMarkdown from 'react-markdown'
-import 'github-markdown-css/github-markdown.css'
+import 'github-markdown-css/github-markdown-dark.css'
+import 'react-quill/dist/quill.snow.css';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Edit from "./Edit/Edit.tsx";
+import User from "./User/User.tsx";
+import Tag from "./Tag/Tag.tsx";
+import Catalog from "./Catalog/Catalog.tsx";
+import Article from "./Article/Article.tsx";
+
 interface ContentProps {
 
 }
 const Content: React.FC<ContentProps> = () => {
+
+
     return (
-        <div className={`content`}>
-            <div className={`markdown-body`}>
-            <ReactMarkdown >
-                {`
-                ### Hi there 👋
-                I'm a software engineer with a passion for creating beautiful and functional websites. I have a strong background in web development and a commitment to delivering high-quality work.
-                
-                ### Skills
-                - HTML5, CSS3, JavaScript
-                - React, Vue, Angular
-                - Node.js, Express
-                - Git, GitHub
-                - Responsive Design
-                - Web Accessibility
-                ### Skills
-                - HTML5, CSS3, JavaScript
-                - React, Vue, Angular
-                - Node.js, Express
-                - Git, GitHub
-                - Responsive Design
-                - Web Accessibility
-                ### Skills
-                - HTML5, CSS3, JavaScript
-                - React, Vue, Angular
-                - Node.js, Express
-                - Git, GitHub
-                - Responsive Design
-                - Web Accessibility
-                ### Projects`
-                }
-            </ReactMarkdown>
-            </div>
-        </div>
+        <Router>
+            <Routes>
+                <Route path="/" element={<Catalog />} />
+                <Route path="/about" element={<User />} />
+                <Route path="/contact" element={<Tag />} />
+                <Route path="/edit/:id" element={<Edit />} />
+                <Route path="/article/:id" element={<Article />} />
+            </Routes>
+        </Router>
+
     );
 }
 
