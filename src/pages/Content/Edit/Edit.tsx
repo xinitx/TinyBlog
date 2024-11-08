@@ -1,78 +1,87 @@
-import ReactQuill from "react-quill";
-import React, {useMemo, useRef, useState} from "react";
-import "react-quill/dist/quill.bubble.css";
+import React, {Fragment, useCallback, useEffect, useRef, useState} from "react";
+import mermaid from "mermaid";
+import { getCodeString } from 'rehype-rewrite';
+import MDEditor, {
+    bold, checkedListCommand, code, codeBlock,
+    commands, comment, help,
+    hr, image, link,
+    orderedListCommand, quote,
+    table,
+    title,
+    unorderedListCommand
+} from '@uiw/react-md-editor';
+import rehypeSanitize from "rehype-sanitize";
 import axios from "axios";
 
-const Edit: React.FC = (props) =>{
-    const [value, setValue] = useState("</p>---\n" +
-        "title: vue\n" +
-        "date: 2024-07-31 22:25:35\n" +
-        "tags: \n" +
-        "---<p>");
-    const editor = useRef();
-    //富文本modules配置
-    const modules: any = useMemo(
-        // useMemo: 解决自定义失焦问题
-        () => ({
-            toolbar: {
-                container: [
-                    ['bold', 'italic', 'underline', 'strike'], // 加粗，斜体，下划线，删除线
-                    ['blockquote', 'code-block'], // 引用，代码块
-                    ['link', 'image' /**'video' */], // 上传链接、图片、上传视频
-                    [{ header: 1 }, { header: 2 }], // 标题，键值对的形式；1、2表示字体大小
-                    [{ list: 'ordered' }, { list: 'bullet' }], // 列表
-                    [{ script: 'sub' }, { script: 'super' }], // 上下标
-                    [{ indent: '-1' }, { indent: '+1' }], // 缩进
-                    [{ direction: 'rtl' }], // 文本方向
-                    [{ size: ['small', false, 'large', 'huge'] }], // 字体大小
-                    [{ header: [1, 2, 3, 4, 5, 6, false] }], // 几级标题
-                    [{ color: [] }, { background: [] }], // 字体颜色，字体背景颜色
-                    [{ font: [] }], // 字体
-                    [{ align: [] }], // 对齐方式
-                    ['clean'], // 清除字体样式
-                ],
-                handlers: {
-                    image: () => {
-                        handleImageInsert();
-                    },
-                },
-            },
-        }),
-        [],
-    );
+const randomid = () => parseInt(String(Math.random() * 1e15), 10).toString(36);
+const Code = ({ inline, children = [], className, ...props }) => {
+    const demoid = useRef(`dome${randomid()}`);
+    const [container, setContainer] = useState(null);
+    const isMermaid =
+        className && /^language-mermaid/.test(className.toLocaleLowerCase());
+    const code = children
+        ? getCodeString(props.node.children)
+        : children[0] || "";
 
-
-    const handleImageInsert = () => {
-        const input = document.createElement('input');
-        input.setAttribute('type', 'file');
-        input.setAttribute('accept', 'image/*');
-        input.click();
-        if(editor.current){
-            let quill = editor.current.getEditor();
-            const cursorPosition = quill.getSelection().index;
-            input.onchange = async () => {
-                const file = input.files?.[0];
-                if (file) {
-                    const url = await handleImageUpload(file);
-                    if (url) {
-                        quill.insertEmbed(cursorPosition, 'image', url, 'user');
+    useEffect(() => {
+        if (container && isMermaid && demoid.current && code) {
+            mermaid
+                .render(demoid.current, code)
+                .then(({ svg, bindFunctions }) => {
+                    container.innerHTML = svg;
+                    if (bindFunctions) {
+                        bindFunctions(container);
                     }
-                }
-            };
+                })
+                .catch((error) => {
+                    console.log("error:", error);
+                });
+        }
+    }, [container, isMermaid, code, demoid]);
+
+    const refElement = useCallback((node) => {
+        if (node !== null) {
+            setContainer(node);
+        }
+    }, []);
+
+    if (isMermaid) {
+        return (
+            <Fragment>
+                <code id={demoid.current} style={{ display: "none" }} />
+                <code className={className} ref={refElement} data-name="mermaid" />
+            </Fragment>
+        );
+    }
+    return <code className={className}>{children}</code>;
+};
+
+
+
+export default function Edit() {
+    const [value, setValue] = React.useState("title:   \n" +
+        "tags:   \n" +
+        "date:   \n" +
+        "\n" +
+        "---\n" +
+        "\n\n<!--more-->");
+
+    const handleMDChange = (value?: string) => {
+        if (value !== undefined) {
+            setValue(value);
         }
     };
+
     // 自定义图片上传处理函数
     const handleImageUpload = async (file: File) => {
         const formData = new FormData();
-        formData.append('image', file, 'image.jpg');
-
+        formData.append('image', file, file.name);
         try {
             const response = await axios.post('http://localhost:8088/api/upload', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-
             // 返回图片 URL
             return response.data.url;
         } catch (error) {
@@ -83,34 +92,164 @@ const Edit: React.FC = (props) =>{
     // 自定义文档上传处理函数
     const handleArticleUpload = async () => {
         try {
-            const response = await axios.post('http://localhost:8088/api/upload/md', {value:value},{
+            axios.post('http://localhost:8088/api/upload/md', {value:value},{
                 headers: {
                     'Content-Type': 'application/json',
                 },
+            }).then(resp =>{
+                if(resp.status === 200 ){
+                    alert("上传成功");
+                }else{
+                    alert("上传失败");
+                }
             });
+
         } catch (error) {
             console.error('Error uploading Article:', error);
-            return '';
         }
     };
-    //富文本配置
-    const options = {
-        modules: modules,
-        placeholder: "请输入...",
-        value: value,
-        theme: 'bubble',
-        onChange: setValue,
-        onBlur:handleArticleUpload
+    const addImage = {
+        name: 'addImage',
+        keyCommand: 'addImage',
+        buttonProps: { 'aria-label': 'Insert image' },
+        icon: (
+            <svg viewBox="0 0 1024 1024" width="12" height="12">
+                <path fill="currentColor" d="M716.8 921.6a51.2 51.2 0 1 1 0 102.4H307.2a51.2 51.2 0 1 1 0-102.4h409.6zM475.8016 382.1568a51.2 51.2 0 0 1 72.3968 0l144.8448 144.8448a51.2 51.2 0 0 1-72.448 72.3968L563.2 541.952V768a51.2 51.2 0 0 1-45.2096 50.8416L512 819.2a51.2 51.2 0 0 1-51.2-51.2v-226.048l-57.3952 57.4464a51.2 51.2 0 0 1-67.584 4.2496l-4.864-4.2496a51.2 51.2 0 0 1 0-72.3968zM512 0c138.6496 0 253.4912 102.144 277.1456 236.288l10.752 0.3072C924.928 242.688 1024 348.0576 1024 476.5696 1024 608.9728 918.8352 716.8 788.48 716.8a51.2 51.2 0 1 1 0-102.4l8.3968-0.256C866.2016 609.6384 921.6 550.0416 921.6 476.5696c0-76.4416-59.904-137.8816-133.12-137.8816h-97.28v-51.2C691.2 184.9856 610.6624 102.4 512 102.4S332.8 184.9856 332.8 287.488v51.2H235.52c-73.216 0-133.12 61.44-133.12 137.8816C102.4 552.96 162.304 614.4 235.52 614.4l5.9904 0.3584A51.2 51.2 0 0 1 235.52 716.8C105.1648 716.8 0 608.9728 0 476.5696c0-132.1984 104.8064-239.872 234.8544-240.2816C258.5088 102.144 373.3504 0 512 0z" />
+            </svg>
+        ),
+        execute: (state, api) => {
+            const input: HTMLInputElement = document.getElementById('upload-file')
+            input.onchange = async () => {
+                const file = input.files?.[0];
+                if (file) {
+                    const url = await handleImageUpload(file)
+                    if(url){
+                        let modifyText = `![](${url})\n`
+                        if(state.selectedText){
+                            modifyText = `![${state.selectedText}](${url})\n`;
+                        }
+                        api.replaceSelection(modifyText);
+                    }
+                }
+            }
+            input.click()
+        }
     };
+    const saveArticle =  {
+        name: 'saveArticle',
+        keyCommand: 'saveArticle',
+        buttonProps: { 'aria-label': 'Save Article' },
+        icon: (
+            <svg  viewBox="0 0 1024 1024"  width="12" height="12">
+                <path
+                    d="M768 896v-341.333333H256v341.333333H170.666667a42.666667 42.666667 0 0 1-42.666667-42.666667V170.666667a42.666667 42.666667 0 0 1 42.666667-42.666667h554.666666l170.666667 170.666667v554.666666a42.666667 42.666667 0 0 1-42.666667 42.666667h-85.333333z m-85.333333 0H341.333333v-256h341.333334v256z"
+                    fill="#000000"></path>
+            </svg>
+        ),
+        execute: (state, api) => {
+            handleArticleUpload()
+        }
+    }
+    return (
+        <div className="app-content">
+            <div className="container" style={{ height: '100%' }}>
+            <MDEditor
+                height={'100%'}
+                value={value}
+                onChange={handleMDChange}
+                previewOptions={{
+                    rehypePlugins: [[rehypeSanitize]],
+                    components: {
+                        code: Code
+                    }
+                }}
+                commands={[commands.group(
+                    [
+                        commands.bold,
+                        commands.italic,
+                        commands.strikethrough,],
+                    {
+                        name: "text",
+                        groupName: "text",
+                        buttonProps: { "aria-label": "Change text" },
+                        icon: (
+                            <svg  viewBox="0 0 1024 1024"
+                                  width="12" height="12">
+                                <path
+                                    d="M913.408 1024l-66.56 0q-29.696 0-51.2-5.12t-36.864-15.872-26.112-27.136-19.968-37.888q-15.36-38.912-28.16-70.656t-22.016-55.296q-11.264-26.624-20.48-49.152l-254.976 0q-7.168 23.552-17.408 51.2-8.192 23.552-21.504 56.832t-30.72 72.192q-20.48 46.08-47.104 63.488t-60.416 17.408l-70.656 0q-45.056 0-60.928-19.968t2.56-68.096q18.432-46.08 43.008-108.544t52.224-132.608 57.344-143.872 57.344-144.384q65.536-164.864 137.216-343.04 7.168-17.408 18.432-31.744 10.24-11.264 27.136-21.504t42.496-10.24q26.624 0 43.52 10.752t28.16 24.064q12.288 15.36 19.456 33.792 72.704 180.224 138.24 345.088 27.648 70.656 57.344 143.872t56.832 142.336 51.2 129.536 41.472 104.448q14.336 34.816 4.096 62.464t-43.008 27.648zM616.448 634.88l-97.28-347.136-1.024 0-108.544 347.136 206.848 0z"
+                                ></path>
+                            </svg>
+                        ),
+                    }
+                ),commands.group(
+                    [
+                        commands.title1,
+                        commands.title2,
+                        commands.title3,
+                        commands.title4,
+                        commands.title5,
+                        commands.title6
+                    ],
+                    {
+                        name: "title",
+                        groupName: "title",
+                        buttonProps: { "aria-label": "Insert title" },
+                        icon: (
+                            <svg viewBox="0 0 1024 1024" width="12" height="12">
+                                <path
+                                    d="M64.1 66v303.7l39.5-1.3c13.6-110.8 102.6-186.4 153.2-199 50.7-12.6 148.3 1.1 148.3 1.1s-1.3 625.2-1.3 669.2c0 44.1-59.3 63-59.3 63l-79 1.3-1.2 55.4h493.1v-54.1h-90.2c-40.8-3.8-65.4-56.7-65.4-56.7l1.1-684.5s61.8-11.3 150.8 5.1c89 16.4 164.3 204.1 164.3 204.1h39.5V66H64.1z"
+                                    fill="#383838"></path>
+                            </svg>
+                        ),
+                    }
+                ),
+                    hr,commands.divider,
+                    commands.group([
+                        link,
+                        quote,
+                        code,
+                        codeBlock,
+                        comment,
+                        image],
+                        {
+                            name: "rich",
+                            groupName: "rich",
+                            buttonProps: { "aria-label": "Insert rich text" },
+                            icon: (
+                                <svg viewBox="0 0 1024 1024" width="12" height="12">
+                                    <path
+                                        d="M218.316 307.727h87.886v205.06h-29.297v29.295h117.179v-29.294H364.79V307.727h87.882v29.293h29.294v-87.882H189.022v87.882h29.294v-29.293z m322.242 58.59h292.945v58.588H540.558v-58.588z m0 117.177h292.945v58.588H540.558v-58.588z m-351.536 117.18h644.481v58.588h-644.48v-58.587z m0 117.176h644.481v58.588h-644.48V717.85z m351.536-468.713h292.945v58.589H540.558v-58.589z m420.923 713.13H61.045V63.309h900.436v898.958z m-864.62-35.816h828.804V99.125H96.861V926.45z"
+                                        ></path>
+                                </svg>
+                            )
+                        }),commands.divider,
+                    commands.group([table,unorderedListCommand,orderedListCommand,checkedListCommand],
+                        {
+                            name: "list",
+                            groupName: "list",
+                            buttonProps: { "aria-label": "Insert list" },
+                            icon: (
+                                <svg  viewBox="0 0 1024 1024"  width="12" height="12">
+                                    <path
+                                        d="M480 64v352c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V64C0 28.6 28.7 0 64 0h352c35.3 0 64 28.6 64 64zM1024 64v352c0 35.3-28.7 64-64 64H608c-35.3 0-64-28.7-64-64V64c0-35.4 28.7-64 64-64h352c35.3 0 64 28.6 64 64zM480 608v352c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V608c0-35.4 28.7-64 64-64h352c35.3 0 64 28.6 64 64zM1024 608v352c0 35.3-28.7 64-64 64H608c-35.3 0-64-28.7-64-64V608c0-35.4 28.7-64 64-64h352c35.3 0 64 28.6 64 64z"
+                                        ></path>
+                                </svg>
+                            )
+                        }),
+                    commands.divider,
+                    addImage, saveArticle,
+                    commands.divider,
+                    help
+                ]}
+            />
 
-// 处理 Quill 图片插入
-
-    return(
-        <div className={`content`} >
-            <div style={{backgroundColor:'#fafafa', color:'#000'}}>
-            <ReactQuill ref={editor} {...options} />
+                <input
+                    id="upload-file"
+                    type="file"
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                />
             </div>
         </div>
-    )
+    );
 }
-export default Edit

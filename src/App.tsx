@@ -30,7 +30,7 @@ function App() {
         };
     }, [appRef]);
     return (
-    <div ref={appRef} className={`app ${sidebarOpen ? 'app-sidebar-open' : ''}`}>
+    <div ref={appRef} className={`app ${sidebarOpen ? 'app-open' : ''}`}>
         <Header></Header>
         <Content></Content>
         <Footer></Footer>

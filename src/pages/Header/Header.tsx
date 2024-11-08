@@ -7,9 +7,9 @@ import {IconSearch} from "../../components/Icon/icons/iconSearch.tsx";
 import {IconLine} from "../../components/Icon/icons/iconLine.tsx";
 const Header = ()=>{
     return (
-        <div className="header">
-            <a className="title"><IconLine className={'title-line'} viewBox={'0 0 180 1'}></IconLine>长风破浪会有时<IconLine className={'title-line'} viewBox={'0 0 180 1'}></IconLine></a>
-            <div className={'header-list'}>
+        <div className="app-header">
+            <a className="app-title"><IconLine className={'app-title-line'} viewBox={'0 0 180 1'}></IconLine>长风破浪会有时<IconLine className={'app-title-line'} viewBox={'0 0 180 1'}></IconLine></a>
+            <div className={'app-header-list'}>
                 <a href={'http://init33.top'} className={'icon-link'} ><IconUser></IconUser>User</a>
                 <a href={'http://init33.top'} className={'icon-link'} ><IconTag></IconTag>Tag</a>
                 <a href={'http://init33.top'} className={'icon-link'} ><IconCategory></IconCategory>Category</a>

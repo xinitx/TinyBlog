@@ -10,7 +10,9 @@ import MusicPlayer from "../../components/MusicPlayer/MusicPlayer.tsx";
 import SliderScroll from "../../components/Slider/sliders/sliderScroll.tsx";
 
 interface SidebarProps {
-    getOpen?: (open: boolean) => void;
+    getOpen?: (open: boolean) => void; //获取开关状态
+    container?: HTMLElement; //侧边栏内容
+    iconList?: HTMLElement[]; //按钮
 }
 const Sidebar: React.FC<SidebarProps> = ( sidebarProps) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -37,14 +39,14 @@ const Sidebar: React.FC<SidebarProps> = ( sidebarProps) => {
         };
     }, [ContainerRef]);
     return (
-        <div className={`sidebar ${isOpen ? 'sidebar-open' : ''}`} ref={ContainerRef}>
-            <div  className={`sidebar-container`} ref={SidebarRef}>
-                  <Avatar className={'sidebar-avatar'} src={viteLogo} alt={'Avatar'} size={'medium'}/>
-                  <div className={'sidebar-linklist'}>
+        <div className={`app-sidebar ${isOpen ? 'app-sidebar-open' : ''}`} ref={ContainerRef}>
+            <div  className={`app-sidebar-container`} ref={SidebarRef}>
+                  <Avatar className={'app-sidebar-avatar'} src={viteLogo} alt={'Avatar'} size={'medium'}/>
+                  <div className={'app-sidebar-linklist'}>
                       <a href={'http://init33.top'} className={'icon-link'}  ><IconEmail></IconEmail>Email</a>
                       <a href={'http://init33.top'} className={'icon-link'}  ><IconGitHub></IconGitHub>GitHub</a>
                   </div>
-                <div className={'typing-text'}>
+                <div className={'app-sidebar-typing-text'}>
                    Have a&nbsp;
                     <TypingEffect
                         strings={["good", "nice", "happy", "wonderful"]}
@@ -54,15 +56,15 @@ const Sidebar: React.FC<SidebarProps> = ( sidebarProps) => {
                     />
                     &nbsp;day!
                 </div>
-                <MusicPlayer className={'sidebar-music'}/>
+                <MusicPlayer className={'app-sidebar-music'}/>
 
             </div>
-            <div className={`${isOpen ? 'sidebar-toggle-open' : 'sidebar-toggle'}`} role="button" onClick={toggleSidebar}>
-                <span className="toggle-line"></span>
-                <span className="toggle-line"></span>
-                <span className="toggle-line"></span>
+            <div className={`${isOpen ? 'app-sidebar-toggle-open' : 'app-sidebar-toggle'}`} role="button" onClick={toggleSidebar}>
+                <span className="app-toggle-line"></span>
+                <span className="app-toggle-line"></span>
+                <span className="app-toggle-line"></span>
             </div>
-            <IconUp className="sidebar-top-button" ></IconUp>
+            <IconUp className="app-sidebar-top-button" ></IconUp>
             <SliderScroll parentRef={SidebarRef}/>
             <SliderScroll vertical={true} parentRef={SidebarRef}/>
         </div>
