@@ -1,70 +1,67 @@
 import './Sidebar.less';
-import Avatar from "../../components/Avatar/Avatar.tsx";
-import viteLogo from "../../assets/react.svg";
 import React, {useEffect, useState} from "react";
-import {IconEmail} from "../../components/Icon/icons/iconEmail.tsx";
-import {IconGitHub} from "../../components/Icon/icons/iconGitHub.tsx";
 import {IconUp} from "../../components/Icon/icons/iconUp.tsx";
-import TypingEffect from "../../components/ TypingEffect/ TypingEffect.tsx";
-import MusicPlayer from "../../components/MusicPlayer/MusicPlayer.tsx";
 import SliderScroll from "../../components/Slider/sliders/sliderScroll.tsx";
+import {useLocation, useNavigate} from "react-router-dom";
+import {IconSideBar} from "../../components/Icon/icons/iconSideBar.tsx";
+import {IconReturn} from "../../components/Icon/icons/iconReturn.tsx";
 
-interface SidebarProps {
-    getOpen?: (open: boolean) => void; //获取开关状态
-    container?: HTMLElement; //侧边栏内容
-    iconList?: HTMLElement[]; //按钮
+export interface SidebarProps {
+    getStatus?: (open: boolean) => void; //获取开关状态
+    getPath?: (path: string) => void; //统一获取当前路由
+    iconList?: React.ReactNode[]; //自定义按钮
+    children?: React.ReactNode; //侧边栏内容
+    scrollToTopRef:  React.RefObject<HTMLDivElement>; //回到顶部
 }
-const Sidebar: React.FC<SidebarProps> = ( sidebarProps) => {
+const Sidebar: React.FC<SidebarProps> = ( {getStatus,scrollToTopRef,getPath, children, iconList}) => {
     const [isOpen, setIsOpen] = useState(false);
+    const [scrollStatus,setScrollStatus ] = useState(false)
     const SidebarRef = React.createRef<HTMLDivElement>();
-    const ContainerRef = React.createRef<HTMLDivElement>();
-    const toggleSidebar = () => {
-        sidebarProps.getOpen && sidebarProps.getOpen(!isOpen);
+    const navigate = useNavigate();
+    const location = useLocation();
+    const scrollToTop = () => {
+        scrollToTopRef.current?.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    };
+    const openSidebar = () => {
+        getStatus && getStatus(!isOpen);
         setIsOpen(!isOpen);
     };
-    const handleResize = () => {
-        if (ContainerRef.current) {
-            // 临时禁用 transition
-            ContainerRef.current.style.transition = "none";
-            // 强制浏览器重新计算样式
-            void ContainerRef.current.offsetWidth;
-            // 恢复 transition
-            ContainerRef.current.style.transition = "left 0.3s ease-in-out";
-        }
+    const handleBack = () => {
+        navigate(-1);
     };
-    useEffect(() => {
-        window.addEventListener("resize", handleResize);
-        return () => {
-            window.removeEventListener("resize", handleResize);
-        };
-    }, [ContainerRef]);
-    return (
-        <div className={`app-sidebar ${isOpen ? 'app-sidebar-open' : ''}`} ref={ContainerRef}>
-            <div  className={`app-sidebar-container`} ref={SidebarRef}>
-                  <Avatar className={'app-sidebar-avatar'} src={viteLogo} alt={'Avatar'} size={'medium'}/>
-                  <div className={'app-sidebar-linklist'}>
-                      <a href={'http://init33.top'} className={'icon-link'}  ><IconEmail></IconEmail>Email</a>
-                      <a href={'http://init33.top'} className={'icon-link'}  ><IconGitHub></IconGitHub>GitHub</a>
-                  </div>
-                <div className={'app-sidebar-typing-text'}>
-                   Have a&nbsp;
-                    <TypingEffect
-                        strings={["good", "nice", "happy", "wonderful"]}
-                        typeSpeed={500}
-                        backSpeed={500}
-                        cursorChar='|'
-                    />
-                    &nbsp;day!
-                </div>
-                <MusicPlayer className={'app-sidebar-music'}/>
+    useEffect(()=>{
+        if(getPath){
+            getPath(location.pathname);
+        }
 
+    },[location])
+    const scrollHandler = () => {
+        if(scrollToTopRef.current?.scrollTop && scrollToTopRef.current?.scrollTop > 0){
+            setScrollStatus(true)
+        }else {
+            setScrollStatus(false)
+        }
+    }
+    useEffect(()=>{
+        scrollToTopRef.current?.addEventListener('scroll',scrollHandler)
+        return ()=>{
+            scrollToTopRef.current?.removeEventListener('scroll',scrollHandler)
+        }
+    }, [scrollToTopRef])
+    return (
+        <div className={`app-sidebar ${isOpen ? 'app-sidebar-open' : ''}`}>
+            <div  className={`app-sidebar-container`} ref={SidebarRef}>
+                {children}
             </div>
-            <div className={`${isOpen ? 'app-sidebar-toggle-open' : 'app-sidebar-toggle'}`} role="button" onClick={toggleSidebar}>
-                <span className="app-toggle-line"></span>
-                <span className="app-toggle-line"></span>
-                <span className="app-toggle-line"></span>
+            <div className={`app-sidebar-iconList`}>
+                <div onClick={handleBack} className="app-sidebar-default-button app-sidebar-button-default-animation"><IconReturn></IconReturn></div>
+                {iconList}
+                <div onClick={openSidebar} className={`app-sidebar-default-button app-sidebar-button-default-animation app-sidebar-open-button ${isOpen?'app-sidebar-open-button-open':''}`}><IconSideBar ></IconSideBar></div>
+                <div onClick={scrollToTop} className={`app-sidebar-default-button ${ scrollStatus ?'app-sidebar-top-button-show' :'app-sidebar-top-button'}`}><IconUp  ></IconUp></div>
             </div>
-            <IconUp className="app-sidebar-top-button" ></IconUp>
             <SliderScroll parentRef={SidebarRef}/>
             <SliderScroll vertical={true} parentRef={SidebarRef}/>
         </div>

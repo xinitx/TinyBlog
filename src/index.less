@@ -1,11 +1,12 @@
 * {
   scrollbar-width: thin; /* 可选值：auto, thin, none */
-  scrollbar-color: rgba(0, 0, 0, 1) rgba(255, 255, 255, 1); /* 滑块颜色 轨道颜色 */
+  scrollbar-color: rgba(0, 0, 0, 0) rgba(255, 255, 255, 0); /* 滑块颜色 轨道颜色 */
   margin: 0;
   padding: 0;
 }
 html, body{
-  background-color: white;
+  overflow: hidden;
+  background-color: rgb(52,58,70,1);
   width: 100vw;
   height: 100vh;
 }
@@ -30,4 +31,7 @@ html, body{
       fill: @link-hover-color;
     }
   }
+}
+*, ::before, ::after {
+  border-color: rgb(39, 55, 76);
 }

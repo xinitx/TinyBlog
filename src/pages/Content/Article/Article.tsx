@@ -1,38 +1,47 @@
 import {useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import {IconUp} from "../../../components/Icon/icons/iconUp.tsx";
+import MDEditor from "@uiw/react-md-editor";
+import './Article.less'
+import {Code} from "../Edit/Edit.tsx"
+import {getArticleById} from "../../../api/articleService.tsx";
 
+const Article : React.FC<{setHeaders: (headers: any[]) => void}> = ({setHeaders}) => {
 
-const Article : React.FC = () => {
     const { id } = useParams();
-    const [data, setData] = useState(null);
+    const [data, setData] = useState("");
+    const getHeaders = (appContentRef: HTMLElement | null) => {
+        if (appContentRef) {
+            const headerElements = appContentRef.querySelectorAll('h1, h2, h3, h4, h5, h6');
+            const headersArray = Array.from(headerElements).map((header) => ({
+                id: header.id,
+                tag: header.nodeName,
+                text: header.textContent || ''
+            }));
+            //console.log(headersArray);
+            setHeaders(headersArray);
+        }
+    };
+    useEffect(()=>{
+        getHeaders(document.getElementById('app-content'));
+    },[data])
     useEffect(() => {
-        console.log(id)
-        fetch('http://localhost:8088/api/md/'+id)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                setData(data.markdown)
-            })
-            .catch(error => {
-                console.error('There has been a problem with your fetch operation:', error);
-            });
+        //console.log(id)
+        if(id){
+            getArticleById(id)
+                .then(res => {
+                    //console.log(res)
+                   setData(res)
+                })
+                .catch(error => {
+                    console.error('There has been a problem with your fetch operation:', error);
+                });
+        }
+
     }, [id]);
     return(
-        <div className={`app-content`}>
-            <IconUp className="app-sidebar-top-button" ></IconUp>
-            <div className={`markdown-body`} style={{marginBottom: '20px'}}>
-                <ReactMarkdown remarkPlugins={[remarkGfm]} >
-                    {data}
-                </ReactMarkdown>
+            <div style={{marginBottom: '20px', width: '100%', height: '100%'}}>
+                <MDEditor.Markdown components={{code: Code}} source={data.slice(data.indexOf('---'))} className={`app-article`} style={{backgroundColor: '#1e293b', color: '#7d7d7d', }}/>
             </div>
-        </div>
     )
 }
 export default Article

@@ -1,35 +1,45 @@
-.app-article-add{
-  width: 20px;
-  height: 20px;
-  position: fixed;
-  background-color: #222;
-  left: 20px;
-  bottom: calc(2% + 68px);
-  padding: 2px;
-}
+
 .app-catalog{
   display: flex;
   flex-direction: column;
+  transition: all 0.3s linear;
 }
 .app-catalog-header{
   display: flex;
   align-items: center;
   margin: 2px;
   .app-catalog-header-title{
-    color: white;
+    color: #ddd;
     text-decoration: none;
     margin-right: 10px;
+    :hover{
+      color: #66ccff;
+    }
   }
   .app-catalog-header-tag{
-
+    color: #000;
+    :hover{
+      color: #66ccff;
+    }
   }
+
 }
 .app-catalog-date{
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  color: #dddddd;
+  color: #666;
   svg{
-    fill: #dddddd;
+    fill: #666;
   }
+  &:hover{
+    color: #777;
+    svg{
+      fill: #777;
+    }
+  }
+}
+.app-catalog-summary{
+  padding: 8px;
+  border-radius: 8px;
 }

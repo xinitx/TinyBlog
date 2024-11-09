@@ -59,8 +59,8 @@ const SliderScroll : React.FC<SliderScrollProps> = (props) => {
 
     return(
         <>
-        { vertical ? scrollable  && <Slider direction={'bottom'} vertical={vertical} barClass={'scroll-vertical'} progress={scrollProgress} func={setScrollProgress} ></Slider>
-        : scrollable  && <Slider vertical={vertical} barClass={'scroll-horizontal'} progress={scrollProgress} func={setScrollProgress} ></Slider>
+        { vertical ? (scrollable  && <Slider direction={'bottom'} vertical={vertical} barClass={'scroll-vertical'} progress={scrollProgress} func={setScrollProgress} ></Slider>)
+        : (scrollable  && <Slider vertical={vertical} barClass={'scroll-horizontal'} progress={scrollProgress} func={setScrollProgress} ></Slider>)
         }
         </>
     )
