@@ -2,7 +2,7 @@ import {useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import MDEditor from "@uiw/react-md-editor";
 import './Article.less'
-import {Code} from "../Edit/Edit.tsx"
+import {Code} from "../../../components/MarkDown/Code.tsx"
 import {getArticleById} from "../../../api/articleService.tsx";
 
 const Article : React.FC<{setHeaders: (headers: any[]) => void}> = ({setHeaders}) => {
@@ -32,14 +32,15 @@ const Article : React.FC<{setHeaders: (headers: any[]) => void}> = ({setHeaders}
                     //console.log(res)
                    setData(res)
                 })
-                .catch(error => {
-                    console.error('There has been a problem with your fetch operation:', error);
+                .catch(() => {
+                    //console.error('There has been a problem with your fetch operation:', error);
                 });
         }
 
     }, [id]);
     return(
             <div style={{marginBottom: '20px', width: '100%', height: '100%'}}>
+                {/* @ts-ignore*/}
                 <MDEditor.Markdown components={{code: Code}} source={data.slice(data.indexOf('---'))} className={`app-article`} style={{backgroundColor: '#1e293b', color: '#7d7d7d', }}/>
             </div>
     )

@@ -9,32 +9,33 @@ export interface Summary {
 }
 export const getSummaries = async ()=>{
     try {
-        const response = await axios.get('http://localhost:8088/summaries');
+        const response = await axios.get(import.meta.env.VITE_BACKEND + '/summaries');
         return response.data as Summary[];
     }catch (e){
-        console.log(e)
+        //console.log(e)
         return []
     }
 }
 export const getArticleById = async (id:string):Promise<string>=>{
     try {
-        const response = await axios.get('http://localhost:8088/article/'+id);
+        const response = await axios.get(import.meta.env.VITE_BACKEND+ '/article/'+id);
         return response.data as string;
     }catch (e){
-        console.log(e)
+        //console.log(e)
         return ""
     }
 }
 export const uploadArticle = async (articleContent:string, id = "0")=>{
     try {
-        const response = await axios.post('http://localhost:8088/uploadArticle', {articleContent:articleContent, id:id},{
+        const response = await axios.post(import.meta.env.VITE_BACKEND+ '/uploadArticle', {articleContent:articleContent, id:id},{
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + sessionStorage.getItem('token')
             },
         })
         return response.data as boolean;
     } catch (error) {
-        console.error('Error uploading Article:', error);
+        //console.error('Error uploading Article:', error);
         return "error";
     }
 }

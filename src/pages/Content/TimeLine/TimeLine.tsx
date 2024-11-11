@@ -19,7 +19,7 @@ const TimeLine: React.FC<{catalogData:Summary[]}> = ({catalogData= []}) => {
             }
         })
         setTimeLine(timeLineBuffer)
-        console.log(timeLineBuffer)
+        //console.log(timeLineBuffer)
     },[catalogData])
     return (
         <div className={'app-time-line'}>

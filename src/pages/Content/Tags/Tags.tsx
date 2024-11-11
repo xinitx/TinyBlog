@@ -31,7 +31,7 @@ const Tags : React.FC<{catalogData:Summary[]}> = ({catalogData= []}) =>{
         })).sort((a, b) => b.weight - a.weight)
 
         source.forEach(item => sum += item.weight)
-        console.log(source)
+        //console.log(source)
         for(let i = 0; i < source.length;){
             while (buffer1.length == 0 || (count <= sum * level && i < source.length)){
                 count += source[i].weight
@@ -42,8 +42,8 @@ const Tags : React.FC<{catalogData:Summary[]}> = ({catalogData= []}) =>{
                 count += source[i].weight
                 buffer2.push(source[i++])
             }
-            console.log(i)
-            console.log(buffer1,buffer2)
+            //console.log(i)
+            //console.log(buffer1,buffer2)
             buffer3.push(buffer1)
             buffer1=[]
             buffer4.push(buffer2)
@@ -52,7 +52,7 @@ const Tags : React.FC<{catalogData:Summary[]}> = ({catalogData= []}) =>{
             count = 0
             //console.log("计数：",count,"目标",sum * level)
         }
-        console.log(buffer3,buffer4)
+        //console.log(buffer3,buffer4)
         setTags1(buffer3)
         setTags2(buffer4.reverse())
     }, [catalogData])

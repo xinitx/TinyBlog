@@ -1,14 +1,10 @@
-import React from 'react';
+
 import './error.less';
 //覆盖颜色
-const ErrorAlert = ({ primary, secondary }) => {
+const ErrorAlert = ({  }) => {
     return (
         <div
-            className="error-icon"
-            style={{
-                '--primary-color': primary || '#ff4b4b',
-                '--secondary-color': secondary || '#fff',
-            }}
+
         />
     );
 };

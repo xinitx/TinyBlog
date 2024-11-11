@@ -8,10 +8,10 @@ export interface Song{
 }
 export const getSongs = async ():Promise<Song[]>=>{
     try {
-        const response = await axios.get('http://localhost:8088/songs');
+        const response = await axios.get(import.meta.env.VITE_BACKEND+ '/songs');
         return response.data as  Song[];
     } catch (e) {
-        console.error(e);
+        //console.error(e);
         return [];
     }
 }

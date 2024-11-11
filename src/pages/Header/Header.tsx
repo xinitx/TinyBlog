@@ -9,7 +9,7 @@ import {Link} from "react-router-dom";
 const Header = ()=>{
     return (
         <div className="app-header">
-            <a className="app-title"><IconLine className={'app-title-line'} viewBox={'0 0 180 1'}></IconLine>克己慎独，守心明性<IconLine className={'app-title-line'} style={{rotate: '180deg'}} viewBox={'0 0 180 1'}></IconLine></a>
+            <Link to={'/'} className="app-title" style={{textDecoration: 'none'}}><IconLine className={'app-title-line'} viewBox={'0 0 180 1'}></IconLine>克己慎独，守心明性<IconLine className={'app-title-line'} style={{rotate: '180deg'}} viewBox={'0 0 180 1'}></IconLine></Link>
             <div className={'app-header-list'}>
                 <Link to={'/login'}  style={{textDecoration: 'none'}}>
                     <div className={'icon-link'}><IconUser></IconUser>User</div>

@@ -51,13 +51,13 @@ function App() {
 
         getSongs().then(res=>{
             setSongs(res);
-        }).catch(error => {
-            console.error(error);
+        }).catch(() => {
+            //console.error(error);
         });
         getSummaries().then(res=>{
             setSummaries(res)
-        }).catch(error => {
-            console.error(error);
+        }).catch(() => {
+            //console.error(error);
         })
     },[])
 
@@ -72,7 +72,7 @@ function App() {
 
     )
 
-    function buildNestedList(flatData: HeaderNode[], level = 1): React.ReactNode[] {
+    function buildNestedList(flatData: HeaderNode[], level = 1): JSX.Element | null {
         let result: React.ReactNode[] = [];
         let currentLevel = level;
 
