@@ -1,11 +1,11 @@
-import React, {lazy, useEffect} from "react";
+import React, {useEffect} from "react";
 import {commands} from '@uiw/react-md-editor';
 import rehypeSanitize from "rehype-sanitize";
 import {useLocation} from "react-router-dom";
 import {getArticleById, uploadArticle} from "../../../api/articleService.tsx";
 import {uploadPicture} from "../../../api/pictureService.tsx";
 import {Code} from "../../../components/MarkDown/Code.tsx";
-const MDEditor = lazy(()=> import("@uiw/react-md-editor"))
+import MDEditor from "@uiw/react-md-editor";
 
 export default function Edit() {
     const [value, setValue] = React.useState("title:   \n" +

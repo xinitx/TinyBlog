@@ -25,10 +25,6 @@ import Search from "./pages/Content/Search/Search.tsx";
 const Article = lazy(()=>import('./pages/Content/Article/Article.tsx'))
 const Edit = lazy(()=>import('./pages/Content/Edit/Edit.tsx'))
 
-
-
-
-
 const AddArticle: React.FC = () => (
     <Link to={'/edit/0'}>
         <div className={`app-sidebar-default-button app-sidebar-button-default-animation`}>
