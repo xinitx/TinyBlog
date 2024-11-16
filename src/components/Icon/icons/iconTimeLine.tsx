@@ -1,7 +1,7 @@
 
 import { createIcon } from '../createIcon';
 
-export const IconTimeLine = createIcon({
+const IconTimeLine = createIcon({
     content: (
         <>
             <path
@@ -11,3 +11,4 @@ export const IconTimeLine = createIcon({
     ),
 
 });
+export default IconTimeLine;

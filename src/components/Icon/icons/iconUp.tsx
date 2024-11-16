@@ -2,7 +2,7 @@
 
 import { createIcon } from '../createIcon';
 
-export const IconUp = createIcon({
+const IconUp = createIcon({
     content: (
         <>
             <path d="M480 192a32 32 0 0 1 64 0v672a32 32 0 0 1-64 0z" ></path>
@@ -13,3 +13,5 @@ export const IconUp = createIcon({
     ),
 
 });
+
+export default IconUp;

@@ -1,12 +1,12 @@
 // src/MusicPlayer.tsx
 import React, {useEffect, useRef, useState} from 'react';
 import "./MusicPlayer.less"
-import {IconPlay} from "../Icon/icons/iconPlay.tsx";
-import {IconPause} from "../Icon/icons/iconPause.tsx";
+import IconPlay from "../Icon/icons/iconPlay.tsx";
+import IconPause from "../Icon/icons/iconPause.tsx";
 import Slider from "../Slider/Slider.tsx";
-import {IconLeftArrow} from "../Icon/icons/iconLeftArrow.tsx";
-import {IconRightArrow} from "../Icon/icons/iconRightArrow.tsx";
-import {IconList} from "../Icon/icons/iconList.tsx";
+import IconLeftArrow from "../Icon/icons/iconLeftArrow.tsx";
+import IconRightArrow from "../Icon/icons/iconRightArrow.tsx";
+import IconList from "../Icon/icons/iconList.tsx";
 import {Song} from "../../api/musicService.tsx";
 interface MusicPlayerProps {
     className?: string;

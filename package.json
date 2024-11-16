@@ -4,22 +4,33 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
+    "dev": "nodemon --watch src/ssr-server --exec node src/ssr-server/server",
+    "build": "npm run build:client && npm run build:server",
+    "build:client": "vite build --outDir dist",
+    "build:server": "vite build --ssr src/entry-server.tsx --outDir dist/server",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "NODE_ENV=production nodemon src/ssr-server/server.js"
   },
   "dependencies": {
     "@uiw/react-md-editor": "^4.0.4",
     "axios": "^1.7.7",
+    "express": "^4.21.1",
     "mermaid": "^11.4.0",
+    "path": "^0.12.7",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.27.0",
-    "rehype-sanitize": "^6.0.0"
+    "rehype-rewrite": "^4.0.2",
+    "rehype-sanitize": "^6.0.0",
+    "serve-static": "^1.16.2",
+    "vite-plugin-ssr": "^0.4.142",
+    "workbox-precaching": "^7.3.0",
+    "workbox-routing": "^7.3.0",
+    "workbox-strategies": "^7.3.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",
+    "@types/express": "^5.0.0",
     "@types/node": "^22.9.0",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
@@ -27,12 +38,17 @@
     "eslint": "^9.13.0",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.14",
+    "esno": "^4.8.0",
     "globals": "^15.11.0",
     "less": "^4.2.0",
-    "less-loader": "^12.2.0",
+    "nodemon": "^3.1.7",
+    "rollup-plugin-visualizer": "^5.12.0",
     "typescript": "~5.6.2",
     "typescript-eslint": "^8.11.0",
     "vite": "^5.4.10",
-    "vite-plugin-chunk-split": "^0.5.0"
+    "vite-plugin-chunk-split": "^0.5.0",
+    "vite-plugin-inspect": "^0.8.7",
+    "vite-plugin-pwa": "^0.21.0",
+    "workbox-webpack-plugin": "^7.3.0"
   }
 }

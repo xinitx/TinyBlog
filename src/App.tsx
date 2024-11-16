@@ -1,29 +1,33 @@
+import React, {lazy, useEffect, useRef, useState} from "react";
+import { Link, Route, Routes} from "react-router-dom";
 import './App.less'
 import './pages/Sidebar/Sidebar.less';
 import Footer from './pages/Footer/Footer';
 import Header from './pages/Header/Header';
-import React, {useEffect, useRef, useState} from "react";
-import {BrowserRouter as Router, Link, Route, Routes} from "react-router-dom";
 import Catalog from "./pages/Content/Catalog/Catalog.tsx";
-import User from "./pages/Content/User/User.tsx";
-import Edit from "./pages/Content/Edit/Edit.tsx";
-import Article from "./pages/Content/Article/Article.tsx";
-
-import SliderScroll from "./components/Slider/sliders/sliderScroll.tsx";
-import {getSongs, Song} from "./api/musicService.tsx";
-import MusicPlayer from "./components/MusicPlayer/MusicPlayer.tsx";
-import Avatar from "./components/Avatar/Avatar.tsx";
-import {IconEmail} from "./components/Icon/icons/iconEmail.tsx";
-import {IconGitHub} from "./components/Icon/icons/iconGitHub.tsx";
-import TypingEffect from "./components/TypingEffect/TypingEffect.tsx";
 import Sidebar from "./pages/Sidebar/Sidebar.tsx";
-import {IconEdit} from "./components/Icon/icons/iconEdit.tsx";
-import {IconAdd} from "./components/Icon/icons/iconAdd.tsx";
+
+import {getSummaries, Summary} from "./api/articleService.tsx";
+import {getSongs, Song} from "./api/musicService.tsx";
+import IconAdd from "./components/Icon/icons/iconAdd.tsx";
+import IconEdit from "./components/Icon/icons/iconEdit.tsx";
+import Avatar from "./components/Avatar/Avatar.tsx";
+import IconEmail from "./components/Icon/icons/iconEmail.tsx";
+import IconGitHub from "./components/Icon/icons/iconGitHub.tsx";
+import TypingEffect from "./components/TypingEffect/TypingEffect.tsx";
+import MusicPlayer from "./components/MusicPlayer/MusicPlayer.tsx";
+import SliderScroll from "./components/Slider/sliders/sliderScroll.tsx";
+import User from "./pages/Content/User/User.tsx";
+import Tags from "./pages/Content/Tags/Tags.tsx";
 import Category from "./pages/Content/Category/Category.tsx";
 import TimeLine from "./pages/Content/TimeLine/TimeLine.tsx";
 import Search from "./pages/Content/Search/Search.tsx";
-import Tags from "./pages/Content/Tags/Tags.tsx";
-import {getSummaries, Summary} from "./api/articleService.tsx";
+const Article = lazy(()=>import('./pages/Content/Article/Article.tsx'))
+const Edit = lazy(()=>import('./pages/Content/Edit/Edit.tsx'))
+
+
+
+
 
 const AddArticle: React.FC = () => (
     <Link to={'/edit/0'}>
@@ -32,6 +36,7 @@ const AddArticle: React.FC = () => (
         </div>
     </Link>
 )
+
 interface HeaderNode{
     id: string;
     text: string;
@@ -41,14 +46,14 @@ function App() {
     const appRef = useRef<HTMLDivElement>(null);
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [historyPath, setHistoryPath] = useState('');
-    const [currentPath, setCurrentPath] = useState(window.location.href);
+    const [currentPath, setCurrentPath] = useState("");
     const [songs, setSongs] = React.useState<Song[]>([]);
     const [headers, setHeaders] = useState<HeaderNode[]>([]);
     const [iconList, setIconList] = useState<React.ReactNode[]>([]);
     const [summaries, setSummaries] = useState<Summary[]>([]);
+    const [loginStatus, setLoginStatus] = useState(false);
 
     useEffect(()=>{
-
         getSongs().then(res=>{
             setSongs(res);
         }).catch(() => {
@@ -71,7 +76,6 @@ function App() {
         </Link>
 
     )
-
     function buildNestedList(flatData: HeaderNode[], level = 1): JSX.Element | null {
         let result: React.ReactNode[] = [];
         let currentLevel = level;
@@ -116,19 +120,19 @@ function App() {
     // 功能组件
     return (
     <div ref={appRef} className={`app ${sidebarOpen ? 'app-open-sidebar' : ''}`}>
-        <Router>
+
         <Header></Header>
         <div id={'app-content'}>
 
             <Routes>
                 <Route path="/" element={<Catalog  catalogData={summaries} />} />
-                <Route path="/login" element={<User />} />
+                <Route path="/login" element={<User loginStatus={loginStatus} setLoginStatus={setLoginStatus} catalogData={summaries} /> } />
                 <Route path="/tags" element={<Tags catalogData={summaries} />} />
-                <Route path="/category" element={<Category catalogData={summaries}  />} />
-                <Route path="/timeline" element={<TimeLine catalogData={summaries} />} />
-                <Route path="/search" element={<Search />} />
-                <Route path="/edit/:id" element={<Edit />} />
-                <Route path="/article/:id" element={<Article setHeaders={setHeaders} />} />
+                <Route path="/category" element={<Category catalogData={summaries}  /> } />
+                <Route path="/timeline" element={<TimeLine catalogData={summaries} /> } />
+                <Route path="/search" element={<Search /> } />
+                <Route path="/edit/:id" element={<Edit /> } />
+                <Route path="/article/:id" element={<Article setHeaders={setHeaders} />}/>
             </Routes>
                 <Sidebar getPath={setCurrentPath} scrollToTopRef={appRef} getStatus={setSidebarOpen} iconList={iconList}>
                     {currentPath.startsWith('/article') ?
@@ -156,11 +160,11 @@ function App() {
                             &nbsp;day!
                         </div>
                     </div>)}
-                    <MusicPlayer songs={songs} className={`app-sidebar-music ${currentPath.startsWith('/article')? ' ': ' '}`}/>
+                    <MusicPlayer songs={songs} className={`app-sidebar-music`}/>
                 </Sidebar>
 
         </div>
-        </Router>
+
         <Footer></Footer>
         <SliderScroll vertical={true} parentRef={appRef}/>
     </div>

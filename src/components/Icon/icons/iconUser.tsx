@@ -1,6 +1,6 @@
 import { createIcon } from '../createIcon';
 
-export const IconUser = createIcon({
+const IconUser = createIcon({
     content: (
         <>
             <path
@@ -8,3 +8,4 @@ export const IconUser = createIcon({
         </>
     ),
 });
+export default IconUser;

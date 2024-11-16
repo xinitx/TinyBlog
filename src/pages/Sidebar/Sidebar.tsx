@@ -1,10 +1,10 @@
 import './Sidebar.less';
 import React, {useEffect, useState} from "react";
-import {IconUp} from "../../components/Icon/icons/iconUp.tsx";
+import IconUp from "../../components/Icon/icons/iconUp.tsx";
 import SliderScroll from "../../components/Slider/sliders/sliderScroll.tsx";
 import {useLocation, useNavigate} from "react-router-dom";
-import {IconSideBar} from "../../components/Icon/icons/iconSideBar.tsx";
-import {IconReturn} from "../../components/Icon/icons/iconReturn.tsx";
+import IconSideBar from "../../components/Icon/icons/iconSideBar.tsx";
+import IconReturn from "../../components/Icon/icons/iconReturn.tsx";
 
 export interface SidebarProps {
     getStatus?: (open: boolean) => void; //获取开关状态

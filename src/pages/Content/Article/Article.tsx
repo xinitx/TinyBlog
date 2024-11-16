@@ -1,10 +1,9 @@
 import {useParams} from "react-router-dom";
-import React, {useEffect, useState} from "react";
-import MDEditor from "@uiw/react-md-editor";
+import React, {lazy, useEffect, useState} from "react";
 import './Article.less'
 import {Code} from "../../../components/MarkDown/Code.tsx"
 import {getArticleById} from "../../../api/articleService.tsx";
-
+const MDEditor = lazy(()=> import("@uiw/react-md-editor"))
 const Article : React.FC<{setHeaders: (headers: any[]) => void}> = ({setHeaders}) => {
 
     const { id } = useParams();
@@ -40,8 +39,13 @@ const Article : React.FC<{setHeaders: (headers: any[]) => void}> = ({setHeaders}
     }, [id]);
     return(
             <div style={{marginBottom: '20px', width: '100%', height: '100%'}}>
-                {/* @ts-ignore*/}
-                <MDEditor.Markdown components={{code: Code}} source={data.slice(data.indexOf('---'))} className={`app-article`} style={{backgroundColor: '#1e293b', color: '#7d7d7d', }}/>
+
+                {id ?
+                    // @ts-ignore
+                    <MDEditor.Markdown components={{code: Code}} source={data.slice(data.indexOf('---'))} className={`app-article`} style={{backgroundColor: '#1e293b', color: '#7d7d7d', }}/>:
+                    <></>
+                }
+
             </div>
     )
 }

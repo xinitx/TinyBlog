@@ -1,6 +1,6 @@
 import "./Footer.less"
-import {IconCopyRight} from "../../components/Icon/icons/iconCopyRight.tsx";
-import {IconHeart} from "../../components/Icon/icons/iconHeart.tsx";
+import IconCopyRight from "../../components/Icon/icons/iconCopyRight.tsx";
+import IconHeart from "../../components/Icon/icons/iconHeart.tsx";
 const Footer = ()=>{
     return(
         <div className="footer">

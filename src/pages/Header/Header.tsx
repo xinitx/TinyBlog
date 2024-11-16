@@ -1,10 +1,10 @@
 import "./Header.less"
-import {IconUser} from "../../components/Icon/icons/iconUser.tsx";
-import {IconCategory} from "../../components/Icon/icons/iconCategory.tsx";
-import {IconTag} from "../../components/Icon/icons/iconTag.tsx";
-import {IconTimeLine} from "../../components/Icon/icons/iconTimeLine.tsx";
-import {IconSearch} from "../../components/Icon/icons/iconSearch.tsx";
-import {IconLine} from "../../components/Icon/icons/iconLine.tsx";
+import IconUser from "../../components/Icon/icons/iconUser.tsx";
+import IconCategory from "../../components/Icon/icons/iconCategory.tsx";
+import IconTag from "../../components/Icon/icons/iconTag.tsx";
+import IconTimeLine from "../../components/Icon/icons/iconTimeLine.tsx";
+import IconSearch from "../../components/Icon/icons/iconSearch.tsx";
+import IconLine from "../../components/Icon/icons/iconLine.tsx";
 import {Link} from "react-router-dom";
 const Header = ()=>{
     return (

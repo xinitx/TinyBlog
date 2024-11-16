@@ -1,6 +1,6 @@
 import { createIcon } from '../createIcon';
 
-export const IconCopyRight = createIcon({
+const IconCopyRight = createIcon({
     content: (
         <>
             <path
@@ -10,3 +10,4 @@ export const IconCopyRight = createIcon({
     ),
 
 });
+export default IconCopyRight;

@@ -2,7 +2,7 @@
 
 
 import { createIcon } from '../createIcon';
-export const IconSideBar = createIcon({
+const IconSideBar = createIcon({
     content: (
         <>
 
@@ -13,3 +13,4 @@ export const IconSideBar = createIcon({
         </>
     ),
 });
+export default IconSideBar;

@@ -1,7 +1,7 @@
 
 import { createIcon } from '../createIcon';
 
-export const IconPlay = createIcon({
+const IconPlay = createIcon({
     content: (
         <>
             <path d="M772.7 217.7a32.2 32.1 0 1 0 64.4 0 32.2 32.1 0 1 0-64.4 0Z" ></path>
@@ -14,3 +14,4 @@ export const IconPlay = createIcon({
         </>
     ),
 });
+export default IconPlay;

@@ -1,6 +1,6 @@
 import { createIcon } from '../createIcon';
 
-export const IconLeftArrow = createIcon({
+const IconLeftArrow = createIcon({
     content: (
         <>
 
@@ -9,3 +9,4 @@ export const IconLeftArrow = createIcon({
         </>
     ),
 });
+export default IconLeftArrow;

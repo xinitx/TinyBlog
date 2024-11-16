@@ -2,8 +2,8 @@ import {Summary} from "../../../api/articleService.tsx";
 import './TimeLine.less'
 import {Link} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {IconLeftArrow} from "../../../components/Icon/icons/iconLeftArrow.tsx";
-import {IconRightArrow} from "../../../components/Icon/icons/iconRightArrow.tsx";
+import IconLeftArrow from "../../../components/Icon/icons/iconLeftArrow.tsx";
+import IconRightArrow from "../../../components/Icon/icons/iconRightArrow.tsx";
 const TimeLine: React.FC<{catalogData:Summary[]}> = ({catalogData= []}) => {
     const [currentYear, setCurrentYear] = useState<number>(new Date().getFullYear())
     const [timeLine, setTimeLine] = useState<Map<number,Summary[]>>(new Map())

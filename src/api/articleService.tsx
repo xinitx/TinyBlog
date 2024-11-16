@@ -39,3 +39,18 @@ export const uploadArticle = async (articleContent:string, id = "0")=>{
         return "error";
     }
 }
+
+export const deleteArticle = async (id:string)=>{
+    try {
+        const response = await axios.post(import.meta.env.VITE_BACKEND+ '/deleteArticle/'+id,{},{
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+            },
+        })
+        return response.data as boolean;
+    } catch (error) {
+        //console.error('Error uploading Article:', error);
+        return false;
+    }
+}

@@ -1,6 +1,6 @@
-import  {Fragment, useCallback, useEffect, useRef, useState} from "react";
+import {Fragment, useCallback, useEffect, useRef, useState} from "react";
 import {getCodeString} from "rehype-rewrite";
-import mermaid from "mermaid";
+
 const randomid = () => parseInt(String(Math.random() * 1e15), 10).toString(36);
 // @ts-ignore
 export const Code = ({ inline, children = [], className, ...props }) => {
@@ -14,18 +14,20 @@ export const Code = ({ inline, children = [], className, ...props }) => {
 
     useEffect(() => {
         if (container && isMermaid && demoid.current && code) {
-            mermaid
-                .render(demoid.current, code)
-                .then(({ svg, bindFunctions }) => {
-                    // @ts-ignore
-                    container.innerHTML = svg;
-                    if (bindFunctions) {
-                        bindFunctions(container);
-                    }
-                })
-                .catch(() => {
-                    //console.log("error:", error);
-                });
+            import('mermaid').then((mermaid)=>{
+                mermaid.default
+                    .render(demoid.current, code)
+                    .then(({ svg, bindFunctions }) => {
+                        // @ts-ignore
+                        container.innerHTML = svg;
+                        if (bindFunctions) {
+                            bindFunctions(container);
+                        }
+                    })
+                    .catch(() => {
+                        //console.log("error:", error);
+                    });
+            })
         }
     }, [container, isMermaid, code, demoid]);
 

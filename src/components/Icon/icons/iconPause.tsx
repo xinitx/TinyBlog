@@ -1,6 +1,6 @@
 import { createIcon } from '../createIcon';
 
-export const IconPause = createIcon({
+const IconPause = createIcon({
     content: (
         <>
             <path d="M121.3 680.4m-40.9 0a40.9 40.9 0 1 0 81.8 0 40.9 40.9 0 1 0-81.8 0Z" fill="#242424"
@@ -17,3 +17,4 @@ export const IconPause = createIcon({
         </>
     ),
 });
+export default IconPause;

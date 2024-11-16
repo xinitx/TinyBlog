@@ -2,7 +2,7 @@
 
 import { createIcon } from '../createIcon';
 
-export const IconEdit = createIcon({
+const IconEdit = createIcon({
     content: (
         <>
 
@@ -13,3 +13,4 @@ export const IconEdit = createIcon({
         </>
     ),
 });
+export default IconEdit

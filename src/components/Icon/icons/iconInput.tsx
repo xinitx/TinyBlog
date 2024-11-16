@@ -2,7 +2,7 @@
 
 import { createIcon } from '../createIcon';
 
-export const IconInput = createIcon({
+const IconInput = createIcon({
     content: (
         <>
             <path
@@ -12,3 +12,4 @@ export const IconInput = createIcon({
     ),
 
 });
+export default IconInput;

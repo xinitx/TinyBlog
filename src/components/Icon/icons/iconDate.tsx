@@ -1,7 +1,7 @@
 
 import { createIcon } from '../createIcon';
 
-export const IconDate = createIcon({
+const IconDate = createIcon({
     content: (
         <>
             <path
@@ -10,3 +10,4 @@ export const IconDate = createIcon({
         </>
     ),
 });
+export default IconDate;
