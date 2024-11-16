@@ -4,12 +4,12 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "nodemon --watch src/ --exec node server",
+    "dev": "nodemon --watch src/ --exec node server.js",
     "build": "npm run build:client && npm run build:server",
     "build:client": "vite build --outDir dist/client",
     "build:server": "vite build --outDir dist/server --ssr src/entry-server.tsx",
     "lint": "eslint .",
-    "preview": "cross-env NODE_ENV=production nodemon server"
+    "preview": "cross-env NODE_ENV=production nodemon server.js"
   },
   "dependencies": {
     "@uiw/react-md-editor": "^4.0.4",

@@ -12,7 +12,7 @@ const dirname = path.dirname(filename);
 
 //过滤出页面请求
 function matchPageUrl(url){
-    if (url ==='/'){
+    if (!url.includes('.') && url.startsWith('/')){
         return true;
     }
     return false;
@@ -29,7 +29,9 @@ async function loadSsrEntryModule(vite) {
     // 生产模式下直接 require 打包后的产物
     if (isProduction) {
         const entryPath = pathToFileURL(path.join(dirname, 'dist/server/entry-server.js'));
-        return await import(entryPath.toString());
+        return import(entryPath);
+
+
     }
     // 开发环境下通过 no-bundle 方式加载
     else {

@@ -3,7 +3,7 @@ import React, { useEffect, useState} from "react";
 import './Article.less'
 import {Code} from "../../../components/MarkDown/Code.tsx"
 import {getArticleById} from "../../../api/articleService.tsx";
-import MDEditor from '@uiw/react-md-editor';
+import MDEditor from "@uiw/react-md-editor";
 
 const Article : React.FC<{setHeaders: (headers: any[]) => void}> = ({setHeaders}) => {
 
