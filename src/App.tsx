@@ -1,5 +1,5 @@
 import React, {lazy, useEffect, useRef, useState} from "react";
-import { Link, Route, Routes} from "react-router-dom";
+import {Link, Route, Routes, useLocation} from "react-router-dom";
 import './App.less'
 import './pages/Sidebar/Sidebar.less';
 import Footer from './pages/Footer/Footer';
@@ -16,7 +16,6 @@ import IconEmail from "./components/Icon/icons/iconEmail.tsx";
 import IconGitHub from "./components/Icon/icons/iconGitHub.tsx";
 import TypingEffect from "./components/TypingEffect/TypingEffect.tsx";
 import MusicPlayer from "./components/MusicPlayer/MusicPlayer.tsx";
-import SliderScroll from "./components/Slider/sliders/sliderScroll.tsx";
 import User from "./pages/Content/User/User.tsx";
 import Tags from "./pages/Content/Tags/Tags.tsx";
 import Category from "./pages/Content/Category/Category.tsx";
@@ -40,15 +39,13 @@ interface HeaderNode{
 }
 function App() {
     const appRef = useRef<HTMLDivElement>(null);
-    const [sidebarOpen, setSidebarOpen] = useState(false);
     const [historyPath, setHistoryPath] = useState('');
-    const [currentPath, setCurrentPath] = useState("");
     const [songs, setSongs] = React.useState<Song[]>([]);
     const [headers, setHeaders] = useState<HeaderNode[]>([]);
     const [iconList, setIconList] = useState<React.ReactNode[]>([]);
     const [summaries, setSummaries] = useState<Summary[]>([]);
     const [loginStatus, setLoginStatus] = useState(false);
-
+    const  location = useLocation();
     useEffect(()=>{
         getSongs().then(res=>{
             setSongs(res);
@@ -64,7 +61,7 @@ function App() {
 
     const EditArticle: React.FC = () => (
 
-        <Link to={'/edit/'+currentPath.split('/article/')[1]}>
+        <Link to={'/edit/'+location.pathname.split('/article/')[1]}>
             <div className={`app-sidebar-default-button app-sidebar-button-default-animation`}>
                 <IconEdit fill={'#fff'} width={'20px'} height={'20px'}>
                 </IconEdit>
@@ -102,36 +99,22 @@ function App() {
     }
     useEffect(() => {
         //切换侧边栏
-        if(historyPath.startsWith('/article') || currentPath.startsWith('/article')){
+        if(historyPath.startsWith('/article') || location.pathname.startsWith('/article')){
 
         }
-        setHistoryPath(currentPath);
-        if(currentPath.startsWith('/article')){
+        setHistoryPath(location.pathname);
+        if(location.pathname.startsWith('/article')){
             setIconList([<AddArticle key={1}/>, <EditArticle key={2}/>]);
         }
-        if((historyPath || historyPath.startsWith('/article') ) && !currentPath.startsWith('/article')){
+        if((historyPath || historyPath.startsWith('/article') ) && !location.pathname.startsWith('/article')){
             setIconList([<AddArticle key={1}/>]);
         }
-    }, [currentPath]);
+    }, [location.pathname]);
     // 功能组件
     return (
-    <div ref={appRef} className={`app ${sidebarOpen ? 'app-open-sidebar' : ''}`}>
-
-        <Header></Header>
-        <div id={'app-content'}>
-
-            <Routes>
-                <Route path="/" element={<Catalog  catalogData={summaries} />} />
-                <Route path="/login" element={<User loginStatus={loginStatus} setLoginStatus={setLoginStatus} catalogData={summaries} /> } />
-                <Route path="/tags" element={<Tags catalogData={summaries} />} />
-                <Route path="/category" element={<Category catalogData={summaries}  /> } />
-                <Route path="/timeline" element={<TimeLine catalogData={summaries} /> } />
-                <Route path="/search" element={<Search /> } />
-                <Route path="/edit/:id" element={<Edit /> } />
-                <Route path="/article/:id" element={<Article setHeaders={setHeaders} />}/>
-            </Routes>
-                <Sidebar getPath={setCurrentPath} scrollToTopRef={appRef} getStatus={setSidebarOpen} iconList={iconList}>
-                    {currentPath.startsWith('/article') ?
+    <div  className={`app`}>
+        <Sidebar scrollToTopRef={appRef} iconList={iconList}>
+                    {location.pathname.startsWith('/article') ?
                     (<div style={{margin: '30px'}}>
                         <div className={'app-sidebar-catalog-title'}>目录</div>
                         <ul className={'app-sidebar-catalog-nav'}>
@@ -139,7 +122,7 @@ function App() {
                         </ul>
                     </div>)
                         :
-                    (<div style={{display: 'flex', flexDirection: 'column'}} >
+                    (<div style={{display: 'flex', flexDirection: 'column', width: '100%'}} >
                         <Avatar className={'app-sidebar-avatar'} src={'/avatar.webp'} alt={'Avatar'} size={'medium'}/>
                         <div className={'app-sidebar-linklist'}>
                             <a href={'mailto://x17152141010@163.com'} className={'icon-link'}  ><IconEmail></IconEmail>Email</a>
@@ -158,11 +141,23 @@ function App() {
                     </div>)}
                     <MusicPlayer songs={songs} className={`app-sidebar-music`}/>
                 </Sidebar>
-
+        <div  className={'app-main'}>
+            <Header></Header>
+            <div ref={appRef} id={'app-content'}>
+                <Routes>
+                    <Route path="/" element={<Catalog  catalogData={summaries} />} />
+                    <Route path="/login" element={<User loginStatus={loginStatus} setLoginStatus={setLoginStatus} catalogData={summaries} /> } />
+                    <Route path="/tags" element={<Tags catalogData={summaries} />} />
+                    <Route path="/category" element={<Category catalogData={summaries}  /> } />
+                    <Route path="/timeline" element={<TimeLine catalogData={summaries} /> } />
+                    <Route path="/search" element={<Search /> } />
+                    <Route path="/edit/:id" element={<Edit /> } />
+                    <Route path="/article/:id" element={<Article setHeaders={setHeaders} />}/>
+                </Routes>
+            </div>
+            <Footer></Footer>
         </div>
-
-        <Footer></Footer>
-        <SliderScroll vertical={true} parentRef={appRef}/>
+        {/*<SliderScroll vertical={true} parentRef={appRef}/>*/}
     </div>
   )
 }

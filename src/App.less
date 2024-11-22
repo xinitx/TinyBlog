@@ -1,15 +1,16 @@
 .app{
+  display: flex;
+}
+
+.app-main{
   height: 100vh;
   display: flex; //宽度自动调整
   flex-direction: column;
   box-sizing: border-box;
   overflow-x: hidden;
-  transition: margin-left 0.3s ease-in-out; /* 动画效果 */
+  transition: width 0.3s ease-in-out; /* 动画效果 */
 }
-.app-open-sidebar{
-  transition: margin-left 0.3s ease-in-out; /* 动画效果 */
-  margin-left: 25vw;
-}
+
 #app-content{
   flex: 1 1 auto;
   background-color: #222222;

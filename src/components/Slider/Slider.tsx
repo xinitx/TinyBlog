@@ -7,13 +7,13 @@ interface SliderProps {
     barClass?: string,
     holderClass?: string,
     progressClass?: string,
-
+    style?: React.CSSProperties
     vertical?: boolean,
     direction?: 'top' | 'bottom'
 }
 
 const Slider: React.FC<SliderProps> = (props)=>{
-    const {  vertical= false,  direction= 'top', func, progress } = props
+    const {  vertical= false,  direction= 'top', func, progress, style } = props
     const sliderRef  = useRef<HTMLDivElement>(null);
     const sliderHolderRef  = useRef<HTMLDivElement>(null);
     const [startX, setStartX] = useState(0);
@@ -82,7 +82,7 @@ const Slider: React.FC<SliderProps> = (props)=>{
         }
     },[isDragging])
     return (
-        <div ref={sliderRef} role="button" className={ (vertical ? "slider-container-vertical ":"slider-container-horizontal ") + (props.barClass ? props.barClass : "")} onClick={toggleSlider}>
+        <div style={style} ref={sliderRef} role="button" className={ (vertical ? "slider-container-vertical ":"slider-container-horizontal ") + (props.barClass ? props.barClass : "")} onClick={toggleSlider}>
             <div ref={sliderHolderRef} className={`slider-holder `} style={ vertical? {bottom: progress * 0.9+'%'}:{left: progress * 0.9+'%'}} onMouseDown={startDragging} onClick={e => e.stopPropagation()}></div>
             <div className="slider-progress"></div>
         </div>
