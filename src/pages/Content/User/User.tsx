@@ -42,7 +42,7 @@ const User: React.FC<{catalogData:Summary[], loginStatus:boolean, setLoginStatus
         };
     }, [isPressed]);
     return (
-        <div style={{width: '100%'}}>
+        <div style={{width: '100%', textAlign: 'center'}}>
         <div className={'app-user'}>
             <input type={'password'} spellCheck="false" className={'app-user-input'} value={password}
                    onChange={e=>setPassword(e.target.value)}
@@ -53,7 +53,8 @@ const User: React.FC<{catalogData:Summary[], loginStatus:boolean, setLoginStatus
                            setPassword(e.currentTarget.value)
                            login(e.currentTarget.value).then(res=>setLoginStatus(res))
                        }}}
-            />
+            >
+            </input>
             <IconInput onClick={async () => setLoginStatus(await login(password))} className={`app-user-button ${password === '' ? '' : 'app-user-button-active'}`} />
         </div>
         <div className={'app-delete-table'}>

@@ -17,7 +17,24 @@
 .app-sidebar-container *{
     transition: all 0.2s linear;
 }
-
+.app-sidebar-container-title{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    > div{
+        flex-grow: 1;
+        flex-basis: 0;
+        text-align: center;
+        font-weight: bold;
+        border: 1px solid #ccc;
+        background-color: #dddddd;
+        cursor: pointer;
+        &:active{
+            scale: 0.9;
+            transition-duration: 0.3s;
+        }
+    }
+}
 .app-sidebar-iconList{
     display: flex;
     flex-direction: column;

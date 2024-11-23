@@ -7,7 +7,7 @@ import {Summary} from "../../../api/articleService.tsx";
 
 const Catalog: React.FC<{catalogData:Summary[]}> = ({catalogData = []}) => {
     return (
-        <div style={{minWidth: '80%'}}>
+        <div style={{maxWidth: '60%'}}>
             {catalogData.map(item => (
                 <div key={item.id} className={`app-catalog`} style={{marginBottom: '20px'}}>
                     <div className={`app-catalog-header`}>
