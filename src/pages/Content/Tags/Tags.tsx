@@ -95,13 +95,15 @@ const Tags : React.FC<{catalogData:Summary[]}> = ({catalogData= []}) =>{
     return(
         <div className={'app-tags-col'}>
             {tags2.map((tags, row )=>{
-                return (<div className={'app-tags-row'}>{tags.map((tag, col)=>{
-                    return <Tag tag={tag.text} key={(row +  1) * col} style={{fontSize: (tag.weight/getStrLeng(tag.text))+'px', color: getColor(tag.weight),rotate:getRotate()}}></Tag>
+                return (<div className={'app-tags-row'} key={'row'+(row +  1)}>{tags.map((tag, col)=>{
+                    //console.log((row +  1) +'-'+ (col + 1))
+                    return <Tag tag={tag.text} key={(row +  1) +'-'+ (col + 1)} style={{fontSize: (tag.weight/getStrLeng(tag.text))+'px', color: getColor(tag.weight),rotate:getRotate()}}></Tag>
                 })}</div>)
             })}
             {tags1.map((tags, row )=>{
-                return (<div className={'app-tags-row'}>{tags.map((tag, col)=>{
-                    return <Tag tag={tag.text} key={(row +  1) * col} style={{fontSize: (tag.weight/getStrLeng(tag.text))+'px', color: getColor(tag.weight),rotate:getRotate()}}></Tag>
+                return (<div className={'app-tags-row'} key={'row'+(row +  1 + tags2.length)}>{tags.map((tag, col)=>{
+                    //console.log((row +  1 + tags2.length) +'-'+ (col + 1))
+                    return <Tag tag={tag.text} key={(row +  1 + tags2.length) +'-'+ (col + 1)} style={{fontSize: (tag.weight/getStrLeng(tag.text))+'px', color: getColor(tag.weight),rotate:getRotate()}}></Tag>
                 })}</div>)
             })}
         </div>

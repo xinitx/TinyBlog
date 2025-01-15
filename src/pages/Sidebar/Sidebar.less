@@ -1,48 +1,45 @@
 @import "../../index";
 .app-sidebar {
     border-left: 0;
-    left: -25vw;
-    top: 0;
-    position: fixed;
-    transition: margin-left 0.3s ease-in-out; /* 动画效果 */
     z-index: 9999; /* 确保在最上层 */
-}
-.app-sidebar-open {
-    transition: margin-left 0.3s ease-in-out; /* 动画效果 */
-    margin-left: 25vw;
-}
-
-.app-sidebar-container {
-    top: 0;
-    left: 0;
-    height: 100vh;
-    width: 25vw; /* 宽度 */
     display: flex;
-    flex-direction: column;
+    position: relative;
+}
+.app-sidebar-container {
+    height: 100vh;
     position: relative;
     overflow: auto; /* 如果内容超出，允许滚动 */
     background-color: rgb(52,58,70,1);
     box-sizing: border-box;
     box-shadow: 2px 0 0 rgba(255, 255, 255, 0.1);
-    padding: 10px;
-  }
+    transition: width 0.3s ease-in-out; /* 动画效果 */
+}
 .app-sidebar-container *{
     transition: all 0.2s linear;
 }
-.app-sidebar-scroll{
-    position: absolute;
-    margin: 0;
-    bottom: 0;
-    left: 0;
-    width: 100%;
+.app-sidebar-container-title{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    > div{
+        flex-grow: 1;
+        flex-basis: 0;
+        text-align: center;
+        font-weight: bold;
+        border: 1px solid #ccc;
+        background-color: #dddddd;
+        cursor: pointer;
+        &:active{
+            scale: 0.9;
+            transition-duration: 0.3s;
+        }
+    }
 }
-
 .app-sidebar-iconList{
     display: flex;
     flex-direction: column;
     position: absolute;
-    right: 0;
-    left: calc(25vw + 20px);
+    right: -40px;
     gap: 20px;
     bottom: 2%;
     .app-sidebar-default-button{

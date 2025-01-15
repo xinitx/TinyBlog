@@ -99,7 +99,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({className,songs=[]}) => {
                 </div>
                 <Slider barClass={'music-progress'} progress={progress} func={handleProgressChange}></Slider>
             </div>
-            <Slider barClass={'music-volume'} progress={volume} vertical={true} func={handleVolumeChange}></Slider>
+            <Slider barClass={`music-volume`} progress={volume} vertical={true} func={handleVolumeChange}></Slider>
             <div className={'music-list'}></div>
         </div>
     );

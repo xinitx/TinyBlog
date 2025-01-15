@@ -26,8 +26,8 @@ const TimeLine: React.FC<{catalogData:Summary[]}> = ({catalogData= []}) => {
             <div key = {0} className={'app-time-line-header-year'}>
                 {currentYear}
                 <div className={'app-time-line-header-year-button'}>
-                <IconLeftArrow  onClick={()=>{setCurrentYear(currentYear+1)}}></IconLeftArrow>
-                <IconRightArrow onClick={()=>{setCurrentYear(currentYear-1)}}></IconRightArrow>
+                <IconLeftArrow  onClick={()=>{ if(currentYear < new Date().getFullYear()) setCurrentYear(currentYear+1)}}></IconLeftArrow>
+                <IconRightArrow onClick={()=>{ if(currentYear > 2021) setCurrentYear(currentYear-1)}}></IconRightArrow>
                 </div>
             </div>
             {timeLine.get(currentYear)?.map((item,index)=>{

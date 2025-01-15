@@ -3,13 +3,14 @@ import Slider from "../Slider.tsx";
 import "./sliderScroll.less"
 interface SliderScrollProps {
     parentRef: React.RefObject<HTMLElement>;
+    style?: React.CSSProperties;
     vertical?: boolean;
 }
 
 const SliderScroll : React.FC<SliderScrollProps> = (props) => {
     const [scrollProgress, setScrollProgress] = useState(0);
     const [scrollable, setScrollable] = useState(false);
-    const {parentRef, vertical= false} = props;
+    const {parentRef, vertical= false, style} = props;
     const observeScrollbar = ():void => {
         if (parentRef.current) {
             if(vertical && parentRef.current?.scrollHeight !== parentRef.current?.clientHeight){
@@ -59,8 +60,8 @@ const SliderScroll : React.FC<SliderScrollProps> = (props) => {
 
     return(
         <>
-        { vertical ? (scrollable  && <Slider direction={'bottom'} vertical={vertical} barClass={'scroll-vertical'} progress={scrollProgress} func={setScrollProgress} ></Slider>)
-        : (scrollable  && <Slider vertical={vertical} barClass={'scroll-horizontal'} progress={scrollProgress} func={setScrollProgress} ></Slider>)
+        { vertical ? (scrollable  && <Slider style={style} direction={'bottom'} vertical={vertical} barClass={'scroll-vertical'} progress={scrollProgress} func={setScrollProgress} ></Slider>)
+        : (scrollable   && <Slider style={style} vertical={vertical} barClass={'scroll-horizontal'} progress={scrollProgress} func={setScrollProgress} ></Slider>)
         }
         </>
     )

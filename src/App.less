@@ -1,15 +1,17 @@
 .app{
+  display: flex;
+}
+
+.app-main{
+  flex: 1 1 auto;
   height: 100vh;
   display: flex; //宽度自动调整
   flex-direction: column;
   box-sizing: border-box;
   overflow-x: hidden;
-  transition: margin-left 0.3s ease-in-out; /* 动画效果 */
+  transition: width 0.3s ease-in-out; /* 动画效果 */
 }
-.app-open-sidebar{
-  transition: margin-left 0.3s ease-in-out; /* 动画效果 */
-  margin-left: 25vw;
-}
+
 #app-content{
   flex: 1 1 auto;
   background-color: #222222;
@@ -42,13 +44,9 @@
   min-height: 80px;
   margin: 20px auto;
 }
-.app-sidebar-catalog-title{
-  font-weight: bold;
-  color: #66ccff;
-  text-align: center;
-  font-size: 1.6em;
-}
+
 .app-sidebar-catalog-nav{
+
   animation: show 0.5s ease-in-out;
   li{
     list-style: none;

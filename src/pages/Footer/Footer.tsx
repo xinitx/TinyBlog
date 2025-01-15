@@ -1,9 +1,11 @@
 import "./Footer.less"
 import IconCopyRight from "../../components/Icon/icons/iconCopyRight.tsx";
 import IconHeart from "../../components/Icon/icons/iconHeart.tsx";
-const Footer = ()=>{
+import {forwardRef} from "react";
+// @ts-ignore
+const Footer = forwardRef<HTMLDivElement, {}>((props, ref)=>{
     return(
-        <div className="footer">
+        <div ref={ref} className="footer">
             <a href="https://beian.miit.gov.cn/" target="_blank" className={"icon-link"}>
                 <span style={{color:"#fff"}}>滇ICP备2023001289号-1</span>
                 <img alt={"img"} src="/Police_Badge_of_China.svg" width={'20px'}></img>
@@ -15,5 +17,5 @@ const Footer = ()=>{
             </div>
         </div>
     )
-}
+})
 export default Footer;

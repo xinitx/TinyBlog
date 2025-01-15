@@ -2,6 +2,7 @@ import {StrictMode, Suspense} from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.less'
 import App from './App.tsx'
+import {BrowserRouter} from "react-router-dom";
 
 
 createRoot(document.getElementById('root')!).render(
@@ -15,7 +16,8 @@ createRoot(document.getElementById('root')!).render(
               <span></span>
           </div>
       }>
-    <App />
+          <BrowserRouter>
+    <App /></BrowserRouter>
       </Suspense>
   </StrictMode>,
 )
