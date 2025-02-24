@@ -2,6 +2,8 @@ import {Summary} from "../../../api/articleService.tsx";
 import {useEffect, useState} from "react";
 import Tag from "../../../components/Tag/Tag.tsx";
 import './Tags.less'
+import TimeLine from "../TimeLine/TimeLine.tsx";
+import IconReturn from "../../../components/Icon/icons/iconReturn.tsx";
 interface TagStyle {
     text: string;
     weight: number; // 权重，用于调整字体大小和颜色
@@ -9,6 +11,7 @@ interface TagStyle {
 const Tags : React.FC<{catalogData:Summary[]}> = ({catalogData= []}) =>{
     const [tags1, setTags1] = useState<TagStyle[][]>([]);
     const [tags2, setTags2] = useState<TagStyle[][]>([]);
+    const [clickItemText, setClickItemText] = useState<string>("");
     useEffect(()=>{
         let buf:Record<string, number> = {}
         catalogData.map(item=> item.tags).flat().map(tag=>tag ? tag : '其他').forEach(tag=>{
@@ -55,6 +58,12 @@ const Tags : React.FC<{catalogData:Summary[]}> = ({catalogData= []}) =>{
         //console.log(buffer3,buffer4)
         setTags1(buffer3)
         setTags2(buffer4.reverse())
+        return ()=>{
+            setTimeout(()=>{
+
+            },2000)
+            console.log("Tags组件销毁")
+        }
     }, [catalogData])
     const minWeight = Math.min(...tags1.flat().map(tag => tag.weight),...tags2.flat().map(tag => tag.weight),0);
     const maxWeight = Math.max(...tags1.flat().map(tag => tag.weight),...tags2.flat().map(tag => tag.weight),0);
@@ -93,20 +102,23 @@ const Tags : React.FC<{catalogData:Summary[]}> = ({catalogData= []}) =>{
         return `${degValue}deg`;
     };
     return(
+        clickItemText === "" ?
         <div className={'app-tags-col'}>
             {tags2.map((tags, row )=>{
                 return (<div className={'app-tags-row'} key={'row'+(row +  1)}>{tags.map((tag, col)=>{
                     //console.log((row +  1) +'-'+ (col + 1))
-                    return <Tag tag={tag.text} key={(row +  1) +'-'+ (col + 1)} style={{fontSize: (tag.weight/getStrLeng(tag.text))+'px', color: getColor(tag.weight),rotate:getRotate()}}></Tag>
+                    return <Tag click={()=>{setClickItemText(tag.text)}} tag={tag.text} key={(row +  1) +'-'+ (col + 1)} style={{fontSize: (tag.weight/getStrLeng(tag.text))+'px', color: getColor(tag.weight),rotate:getRotate()}}></Tag>
                 })}</div>)
             })}
             {tags1.map((tags, row )=>{
                 return (<div className={'app-tags-row'} key={'row'+(row +  1 + tags2.length)}>{tags.map((tag, col)=>{
                     //console.log((row +  1 + tags2.length) +'-'+ (col + 1))
-                    return <Tag tag={tag.text} key={(row +  1 + tags2.length) +'-'+ (col + 1)} style={{fontSize: (tag.weight/getStrLeng(tag.text))+'px', color: getColor(tag.weight),rotate:getRotate()}}></Tag>
+                    return <Tag click={()=>{setClickItemText(tag.text)}} tag={tag.text} key={(row +  1 + tags2.length) +'-'+ (col + 1)} style={{fontSize: (tag.weight/getStrLeng(tag.text))+'px', color: getColor(tag.weight),rotate:getRotate()}}></Tag>
                 })}</div>)
             })}
-        </div>
+        </div> : <><IconReturn onClick={()=>{setClickItemText("")}} style={{fill:'#fff', left: '30%', position: 'absolute', transform: `translateX(50%) translateY(-100%)`, cursor: 'pointer'}}></IconReturn>
+            <TimeLine catalogData={catalogData.filter(item=>item.tags.includes(clickItemText))}></TimeLine>
+            </>
     )
 }
 

@@ -10,7 +10,7 @@ export interface Summary {
 export const getSummaries = async ()=>{
     try {
         const response = await axios.get(import.meta.env.VITE_BACKEND + '/summaries');
-        return response.data as Summary[];
+        return (response.data as Summary[]).reverse();
     }catch (e){
         //console.log(e)
         return []

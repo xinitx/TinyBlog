@@ -1,7 +1,6 @@
 import {useParams} from "react-router-dom";
 import React, { useEffect, useState} from "react";
 import './Article.less'
-import {Code} from "../../../components/MarkDown/Code.tsx"
 import {getArticleById} from "../../../api/articleService.tsx";
 import MDEditor from "@uiw/react-md-editor";
 
@@ -43,7 +42,7 @@ const Article : React.FC<{setHeaders: (headers: any[]) => void}> = ({setHeaders}
 
                 {id ?
                     // @ts-ignore
-                    <MDEditor.Markdown components={{code: Code}} source={data.slice(data.indexOf('---'))} className={`app-article`} style={{backgroundColor: '#1e293b', color: '#7d7d7d', }}/>:
+                    <MDEditor.Markdown source={data.slice(data.indexOf('---'))} className={`app-article`} style={{backgroundColor: '#1e293b', color: '#7d7d7d', }}/>:
                     <></>
                 }
 

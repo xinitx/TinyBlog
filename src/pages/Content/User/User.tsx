@@ -42,7 +42,7 @@ const User: React.FC<{catalogData:Summary[], loginStatus:boolean, setLoginStatus
         };
     }, [isPressed]);
     return (
-        <div style={{width: '100%', textAlign: 'center'}}>
+        <div style={{width: '100%'}}>
         <div className={'app-user'}>
             <input type={'password'} spellCheck="false" className={'app-user-input'} value={password}
                    onChange={e=>setPassword(e.target.value)}

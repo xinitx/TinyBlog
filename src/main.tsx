@@ -3,7 +3,8 @@ import { createRoot } from 'react-dom/client'
 import './index.less'
 import App from './App.tsx'
 import {BrowserRouter} from "react-router-dom";
-
+import store from './store';
+import {Provider} from "react-redux";
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
@@ -17,7 +18,10 @@ createRoot(document.getElementById('root')!).render(
           </div>
       }>
           <BrowserRouter>
-    <App /></BrowserRouter>
+              <Provider store={store}>
+              <App />
+              </Provider>
+          </BrowserRouter>
       </Suspense>
   </StrictMode>,
 )

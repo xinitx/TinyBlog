@@ -10,11 +10,11 @@ const getRandomColor = (): string => {
     //console.log(color);
     return color;
 };
-const Tag: React.FC<{ tag: string,style?: React.CSSProperties }> = ({ tag, style }) => {
+const Tag: React.FC<{ tag: string,style?: React.CSSProperties,click?:(e:any)=>void }> = ({ tag, style, click }) => {
     // 生成随机颜色
     const randomColor = getRandomColor();
     return (
-        <div className={'app-tag'} style={{...style, backgroundColor: randomColor}}>
+        <div className={'app-tag'} style={{...style, backgroundColor: randomColor}} onClick={click}>
             {tag}
         </div>
     )

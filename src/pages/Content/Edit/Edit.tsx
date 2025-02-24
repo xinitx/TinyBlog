@@ -3,10 +3,10 @@ import rehypeSanitize from "rehype-sanitize";
 import {useLocation} from "react-router-dom";
 import {getArticleById, uploadArticle} from "../../../api/articleService.tsx";
 import {uploadPicture} from "../../../api/pictureService.tsx";
-import {Code} from "../../../components/MarkDown/Code.tsx";
 import MDEditor from "@uiw/react-md-editor";
 import {commands} from "@uiw/react-md-editor"
 export default function Edit() {
+    const editComponent = React.useRef<HTMLDivElement>(null);
     const [value, setValue] = React.useState("title:   \n" +
         "tags:   \n" +
         "category:   \n" +
@@ -15,6 +15,9 @@ export default function Edit() {
         "\n\n<!--more-->");
     let location = useLocation();
     useEffect(()=>{
+        console.log(location)
+
+
         if(!location.pathname.startsWith('/edit/0')){
             let id = location.pathname.split('/edit/')[1]
             if(id){
@@ -32,9 +35,32 @@ export default function Edit() {
                 "---\n" +
                 "\n\n<!--more-->")
         }
+
     },[location])
+    useEffect(() => {
+        let shortcut = (event: any)=> {
+            // 检查是否按下了Ctrl键和S键
+            if (event.ctrlKey && event.key === 's') {
+                // 阻止默认的保存行为
+                event.preventDefault();
+                // 执行自定义的保存逻辑
+                handleArticleUpload(value)
+            }
+            // 检查是否按下了Ctrl键和P键
+            if (event.ctrlKey && event.key === 'p') {
+                // 阻止默认的保存行为
+                event.preventDefault();
+                // 执行自定义的保存逻辑
+                (document.querySelector('[aria-label="Insert image"]') as HTMLButtonElement).click()
+            }
+        }
+        document.addEventListener('keydown', shortcut);
+        return ()=>{
+            document.removeEventListener('keydown', shortcut)
+        }
+    }, [value])
     const handleMDChange = (value?: string) => {
-        if (value !== undefined) {
+        if (value) {
             setValue(value);
         }
     };
@@ -42,6 +68,8 @@ export default function Edit() {
     // 自定义图片上传处理函数
     const handleImageUpload = (file: File) => {
         return uploadPicture(file).then(res=>{
+            console.log("上传图片4")
+            console.log(res)
             return res
         }).catch(() => {
             //console.error('There has been a problem with your fetch operation:', error);
@@ -64,19 +92,21 @@ export default function Edit() {
     const addImage = {
         name: 'addImage',
         keyCommand: 'addImage',
-        buttonProps: { 'aria-label': 'Insert image' },
+        buttonProps: { 'aria-label': 'Insert image' , title: 'Insert image (ctrl + p)' },
         icon: (
             <svg viewBox="0 0 1024 1024" width="12" height="12">
                 <path fill="currentColor" d="M716.8 921.6a51.2 51.2 0 1 1 0 102.4H307.2a51.2 51.2 0 1 1 0-102.4h409.6zM475.8016 382.1568a51.2 51.2 0 0 1 72.3968 0l144.8448 144.8448a51.2 51.2 0 0 1-72.448 72.3968L563.2 541.952V768a51.2 51.2 0 0 1-45.2096 50.8416L512 819.2a51.2 51.2 0 0 1-51.2-51.2v-226.048l-57.3952 57.4464a51.2 51.2 0 0 1-67.584 4.2496l-4.864-4.2496a51.2 51.2 0 0 1 0-72.3968zM512 0c138.6496 0 253.4912 102.144 277.1456 236.288l10.752 0.3072C924.928 242.688 1024 348.0576 1024 476.5696 1024 608.9728 918.8352 716.8 788.48 716.8a51.2 51.2 0 1 1 0-102.4l8.3968-0.256C866.2016 609.6384 921.6 550.0416 921.6 476.5696c0-76.4416-59.904-137.8816-133.12-137.8816h-97.28v-51.2C691.2 184.9856 610.6624 102.4 512 102.4S332.8 184.9856 332.8 287.488v51.2H235.52c-73.216 0-133.12 61.44-133.12 137.8816C102.4 552.96 162.304 614.4 235.52 614.4l5.9904 0.3584A51.2 51.2 0 0 1 235.52 716.8C105.1648 716.8 0 608.9728 0 476.5696c0-132.1984 104.8064-239.872 234.8544-240.2816C258.5088 102.144 373.3504 0 512 0z" />
             </svg>
         ),
-        // @ts-ignore
-        execute: (state, api) => {
+
+        execute: (state: any, api: any) => {
             const input: HTMLInputElement | null = document.getElementById('upload-file') as HTMLInputElement
             if(input){
                 input.onchange = async () => {
+                    console.log("上传图片")
                     const file = input.files?.[0];
                     if (file) {
+                        console.log("上传图片2")
                         const url = await handleImageUpload(file)
                         if(url){
                             let modifyText = `![](${url})\n`
@@ -94,7 +124,7 @@ export default function Edit() {
     const saveArticle =  {
         name: 'saveArticle',
         keyCommand: 'saveArticle',
-        buttonProps: { 'aria-label': 'Save Article' },
+        buttonProps: { 'aria-label': 'Save Article', title: 'Save Article (ctrl + s)' },
         icon: (
             <svg  viewBox="0 0 1024 1024"  width="12" height="12">
                 <path
@@ -102,25 +132,22 @@ export default function Edit() {
                     fill="#000000"></path>
             </svg>
         ),
-        execute: () => {
-            handleArticleUpload(value)
+        execute: (state: any) => {
+            handleArticleUpload(state.text)
         }
     }
-    // @ts-ignore
+
     return (
-        <div style={{width:'100%',height:'100%'}}>
+        <div style={{width:'100%',height:'100%'}} ref={editComponent}>
             <div className="container" style={{ height: '100%' }}>
                 <MDEditor
+
                     style={{ backgroundColor: '#dedede'}}
                     height={'100%'}
                     value={value}
                     onChange={handleMDChange}
                     previewOptions={{
                         rehypePlugins: [[rehypeSanitize]],
-                        components: {
-                            // @ts-ignore
-                            code: Code
-                        }
                     }}
                     commands={[commands.group(
                         [
@@ -152,7 +179,7 @@ export default function Edit() {
                         {
                             name: "title",
                             groupName: "title",
-                            buttonProps: { "aria-label": "Insert title" },
+                            buttonProps: { "aria-label": "Insert title", title: "Insert title" },
                             icon: (
                                 <svg viewBox="0 0 1024 1024" width="12" height="12">
                                     <path
